@@ -1,0 +1,86 @@
+openapi: 3.0.0
+info:
+  title: Student Dashboard API
+  description: API endpoints for the Student Dashboard, allowing students to view courses they're enrolled in and receive course recommendations.
+  version: 1.0.0
+servers:
+  - url: /v1/student
+    description: Base path for student-related operations
+paths:
+  /courses:
+    get:
+      summary: Retrieve courses the student is enrolled in
+      description: Fetches a list of courses that the student has enrolled in, including details such as course name, thumbnail URL, and course ID.
+      tags:
+        - Enrolled Courses
+      responses:
+        '200':
+          description: A list of enrolled courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /recommendedCourses:
+    get:
+      summary: Retrieve recommended courses for the student
+      description: Fetches a list of recommended courses for the student, each including details like the course name, thumbnail URL, and course ID.
+      tags:
+        - Recommended Courses
+      responses:
+        '200':
+          description: A list of recommended courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Course:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the course.
+        thumbnail_url:
+          type: string
+          description: URL to the thumbnail image for the course.
+        id:
+          type: string
+          description: The unique identifier for the course.
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          description: Error message detailing what went wrong.

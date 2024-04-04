@@ -1,0 +1,118 @@
+openapi: 3.0.0
+info:
+  title: Instructor Dashboard APIs
+  description: 'APIs built for Instructor Dashboard.'
+  version: 1.0.0
+servers:
+  - url: /v1/instructor
+    description: Production server
+paths:
+  /courses:
+    get:
+      summary: Endpoint to retrieve courses for the instructor.
+      description: |
+        This endpoint retrieves a list of courses that an instructor has access to. It includes a thumbnail image for each course, the course name, and the course ID.
+      tags:
+        - Courses
+      operationId: getCourses
+      responses:
+        '200':
+          description: A list of courses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CoursesResponse'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Endpoint to create a new course.
+      description: |
+        This endpoint allows for the creation of a new course with specific attributes like course name and course tags.
+      tags:
+        - Courses
+      operationId: createCourse
+      requestBody:
+        description: The course data to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCourseRequest'
+      responses:
+        '201':
+          description: Course created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    CoursesResponse:
+      type: object
+      properties:
+        courses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Course'
+    NewCourseRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the course.
+        tags:
+          type: array
+          items:
+            type: string
+          description: A list of tags associated with the course.
+        summary:
+          type: string
+          description: A summary for the new course.
+    Course:
+      type: object
+      properties:
+        thumbnail_url:
+          type: string
+          description: URL to the thumbnail image for the course.
+        name:
+          type: string
+          description: The name of the course.
+        id:
+          type: string
+          description: The unique identifier for the course.
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
