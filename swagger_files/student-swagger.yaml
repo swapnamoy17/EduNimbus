@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Student Dashboard API
-  description: API endpoints for the Student Dashboard, allowing students to view courses they're enrolled in and receive course recommendations.
+  title: Student APIs
+  description: API endpoints for the Student Dashboard and operations.
   version: 1.0.0
 servers:
   - url: /v1/student
@@ -9,27 +9,34 @@ servers:
 paths:
   /courses:
     get:
-      summary: Retrieve courses the student is enrolled in
-      description: Fetches a list of courses that the student has enrolled in, including details such as course name, thumbnail URL, and course ID.
-      tags:
-        - Enrolled Courses
+      summary: Get courses (filtered by id)
+      description: >
+        This API takes in a course ID as a query parameter and returns
+        information about the course.
+      operationId: getCourses
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+          description: The ID of the course to retrieve information for.
       responses:
         '200':
-          description: A list of enrolled courses
+          description: Course information retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Course'
-        '401':
-          description: Unauthorized
+        '400':
+          description: Bad request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal Server Error
+        '404':
+          description: Course not found
           content:
             application/json:
               schema:
@@ -66,15 +73,16 @@ components:
     Course:
       type: object
       properties:
-        name:
-          type: string
-          description: The name of the course.
-        thumbnail_url:
-          type: string
-          description: URL to the thumbnail image for the course.
         id:
           type: string
-          description: The unique identifier for the course.
+        name:
+          type: string
+        summary:
+          type: string
+        thumbnail_url:
+          type: string
+        rating:
+          type: integer
     Error:
       type: object
       properties:
