@@ -16,7 +16,6 @@ paths:
       parameters:
         - in: query
           name: id
-          required: true
           schema:
             type: string
           description: The ID of the course to retrieve information for.
