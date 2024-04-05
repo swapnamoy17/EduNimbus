@@ -50,7 +50,7 @@ components:
           type: string
         summary:
           type: string
-        thumbnail:
+        thumbnail_url:
           type: string
         rating:
           type: integer
