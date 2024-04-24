@@ -1,18 +1,13 @@
 import React from 'react';
-import {
-  CognitoUserPool,
-  CognitoUser,
-  AuthenticationDetails,
-} from 'amazon-cognito-identity-js';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import StudentDashboard from './StudentDashboard';
 import InstructorDashboard from './InstructorDashboard';
 import LoginPage from './LoginPage';
 
-// Your Cognito User Pool Data
 const poolData = {
   UserPoolId: 'your-user-pool-id',
-  ClientId: 'your-client-id'
+  ClientId: 'your-app-client-id'
 };
 
 const userPool = new CognitoUserPool(poolData);
@@ -20,24 +15,23 @@ const userPool = new CognitoUserPool(poolData);
 function App() {
   const [user, setUser] = React.useState(null);
 
-  // Check the user's session when the component mounts
   React.useEffect(() => {
-    const cognitoUser = userPool.getCurrentUser();
-    if (cognitoUser) {
-      cognitoUser.getSession((err, session) => {
-        if (err) {
-          console.error(err);
-          return;
+    const currentUser = userPool.getCurrentUser();
+    if (currentUser) {
+      currentUser.getSession((err, session) => {
+        if (session && session.isValid()) {
+          setUser(currentUser);
+        } else {
+          setUser(null);
         }
-        setUser(cognitoUser);
       });
     }
   }, []);
 
   const handleLogout = () => {
-    const cognitoUser = userPool.getCurrentUser();
-    if (cognitoUser) {
-      cognitoUser.signOut();
+    const currentUser = userPool.getCurrentUser();
+    if (currentUser) {
+      currentUser.signOut();
       setUser(null);
     }
   };
@@ -45,18 +39,12 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Switch>
-          {/* Routes go here */}
-          <Route path="/login">
-            <LoginPage userPool={userPool} setUser={setUser} />
-          </Route>
-          <Route path="/student-dashboard">
-            {user ? <StudentDashboard onLogout={handleLogout} /> : <Redirect to="/login" />}
-          </Route>
-          <Route path="/instructor-dashboard">
-            {user ? <InstructorDashboard onLogout={handleLogout} /> : <Redirect to="/login" />}
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/login" element={<LoginPage setUser={setUser} />} />
+          <Route path="/student-dashboard" element={user ? <StudentDashboard onLogout={handleLogout} /> : <Navigate replace to="/login" />} />
+          <Route path="/instructor-dashboard" element={user ? <InstructorDashboard onLogout={handleLogout} /> : <Navigate replace to="/login" />} />
+          <Route path="*" element={<Navigate replace to="/login" />} />
+        </Routes>
       </div>
     </Router>
   );
