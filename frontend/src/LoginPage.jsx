@@ -6,7 +6,7 @@ function LoginPage() {
     const domain = process.env.REACT_APP_COGNITO_DOMAIN; // Replace with your actual domain
     const clientId = process.env.REACT_APP_COGNITO_CLIENT_ID; // Replace with your actual client ID
     const responseType = 'code'; // You can use 'code' for authorization code grant flow
-    const redirectUri = encodeURIComponent('http://localhost:3000/');
+    const redirectUri = encodeURIComponent('http://localhost:3000/dashboard');
     const scope = encodeURIComponent('openid email'); 
 
     const loginUrl = `https://${domain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;

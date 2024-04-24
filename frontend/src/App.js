@@ -15,7 +15,7 @@ function App() {
       const params = new URLSearchParams(search);
       const domain = process.env.REACT_APP_COGNITO_DOMAIN;
       const clientId = process.env.REACT_APP_COGNITO_CLIENT_ID; 
-      const redirectUri = encodeURIComponent('http://localhost:3000/');
+      const redirectUri = encodeURIComponent('http://localhost:3000/dashboard');
       const code = params.get('code');
       if (code) {
         try {
