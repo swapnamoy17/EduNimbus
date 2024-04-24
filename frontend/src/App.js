@@ -1,51 +1,63 @@
-import React from 'react';
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import StudentDashboard from './StudentDashboard';
 import InstructorDashboard from './InstructorDashboard';
 import LoginPage from './LoginPage';
-
-const poolData = {
-  UserPoolId: 'your-user-pool-id',
-  ClientId: 'your-app-client-id'
-};
-
-const userPool = new CognitoUserPool(poolData);
+import { jwtDecode } from 'jwt-decode';
 
 function App() {
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
 
-  React.useEffect(() => {
-    const currentUser = userPool.getCurrentUser();
-    if (currentUser) {
-      currentUser.getSession((err, session) => {
-        if (session && session.isValid()) {
-          setUser(currentUser);
-        } else {
-          setUser(null);
+  useEffect(() => {
+    const handleAuthentication = async () => {
+      const search = window.location.search;
+      const params = new URLSearchParams(search);
+      const domain = process.env.REACT_APP_COGNITO_DOMAIN;
+      const clientId = process.env.REACT_APP_COGNITO_CLIENT_ID; 
+      const redirectUri = encodeURIComponent('http://localhost:3000/');
+      const code = params.get('code');
+      if (code) {
+        try {
+          console.log("Inside useEffect try")
+          const response = await fetch(`https://${domain}/oauth2/token`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `grant_type=authorization_code&client_id=${clientId}=${code}&redirect_uri=${redirectUri}`
+          });
+          const data = await response.json();
+          if (data.id_token) {
+            const decoded = jwtDecode(data.id_token);
+            setUser(decoded);
+            setRole(decoded['cognito:groups'] && decoded['cognito:groups'][0]);
+          }
+        } catch (error) {
+          console.error('Error exchanging code for tokens', error);
         }
-      });
-    }
+      }
+    };
+
+    handleAuthentication();
   }, []);
 
-  const handleLogout = () => {
-    const currentUser = userPool.getCurrentUser();
-    if (currentUser) {
-      currentUser.signOut();
-      setUser(null);
+  const getDashboard = () => {
+    if (role === 'Instructors') {
+      return <InstructorDashboard />;
+    } else if (role === 'Students') {
+      return <StudentDashboard />;
+    } else {
+      return <Navigate to="/" />;
     }
   };
 
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/login" element={<LoginPage setUser={setUser} />} />
-          <Route path="/student-dashboard" element={user ? <StudentDashboard onLogout={handleLogout} /> : <Navigate replace to="/login" />} />
-          <Route path="/instructor-dashboard" element={user ? <InstructorDashboard onLogout={handleLogout} /> : <Navigate replace to="/login" />} />
-          <Route path="*" element={<Navigate replace to="/login" />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/dashboard" element={user ? getDashboard() : <Navigate to="/" />} />
+      </Routes>
     </Router>
   );
 }

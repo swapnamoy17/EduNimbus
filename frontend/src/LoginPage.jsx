@@ -1,62 +1,22 @@
-import React, { useState } from 'react';
-import { CognitoUserPool, CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import React, { useEffect } from 'react';
 
-function LoginPage({ setUser }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+function LoginPage() {
+  useEffect(() => {
+    // Construct the Hosted UI URL
+    const domain = process.env.REACT_APP_COGNITO_DOMAIN; // Replace with your actual domain
+    const clientId = process.env.REACT_APP_COGNITO_CLIENT_ID; // Replace with your actual client ID
+    const responseType = 'code'; // You can use 'code' for authorization code grant flow
+    const redirectUri = encodeURIComponent('http://localhost:3000/');
+    const scope = encodeURIComponent('openid email'); 
 
-  const userPool = new CognitoUserPool({
-    UserPoolId: 'your-user-pool-id',
-    ClientId: 'your-app-client-id',
-  });
+    const loginUrl = `https://${domain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
 
-  const onLogin = (event) => {
-    event.preventDefault();
-
-    const authenticationDetails = new AuthenticationDetails({
-      Username: username,
-      Password: password,
-    });
-
-    const cognitoUser = new CognitoUser({
-      Username: username,
-      Pool: userPool,
-    });
-
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: (result) => {
-        console.log('Login successful!', result);
-        setUser(cognitoUser);
-      },
-      onFailure: (err) => {
-        console.error('Login failed!', err);
-      },
-      newPasswordRequired: (userAttributes) => {
-        // User needs to provide a new password and any required attributes here
-        // This is common if the user is logging in for the first time
-        console.log('New password required');
-      },
-    });
-  };
+    // Redirect to the Hosted UI
+    window.location.href = loginUrl;
+  }, []);
 
   return (
-    <div>
-      <form onSubmit={onLogin}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <div>Loading...</div>
   );
 }
 
