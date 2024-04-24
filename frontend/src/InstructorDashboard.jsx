@@ -1,26 +1,37 @@
 // InstructorDashboard.js
-import React from 'react';
+import React, { useState } from 'react';
+import NewCoursePopup from './NewCoursePopup';
 import './InstructorDashboard.css';
 
 const courseData = [
   // Placeholder for course data. You would fetch this data from an API.
   {
     id: '1',
-    thumbnailUrl: '/Users/swaralidabhadkar/Documents/NYU/Sem 2/Cloud/Assignment 3/bird.jpg', // Replace with actual thumbnail URL
+    thumbnailUrl: '/edu-nimbus.png', // Replace with actual thumbnail URL
     title: 'Course Title 1'
   },
   // Add more courses as needed
 ];
 
-function InstructorDashboard({ onLogout }) {
+function InstructorDashboard() {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleAddNewClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
   return (
     <div>
       <div className="instructor-dashboard">
       <header className="dashboard-header">
-        <img src="path-to-logo.png" alt="Logo" className="logo" /> {/* Replace with actual logo path */}
+        <img src="/edu-nimbus.png" alt="Logo" className="logo" /> {/* Replace with actual logo path */}
         <div className="user-profile">
           <span>Sambit S</span>
-          <img src="path-to-user-avatar.png" alt="User Avatar" className="user-avatar" /> {/* Replace with actual avatar path */}
+          <img src="/instructor-logo.png" alt="User Avatar" className="user-avatar" /> {/* Replace with actual avatar path */}
         </div>
       </header>
       
@@ -34,15 +45,14 @@ function InstructorDashboard({ onLogout }) {
           </div>
         ))}
         
-        <div className="course-card add-new">
+        <div className="course-card add-new" onClick={handleAddNewClick}>
           <span>+</span>
           <span>Add New Course</span>
         </div>
       </div>
     </div>
-      <h1>Instructor Dashboard</h1>
-      {/* Display your courses here */}
-      <button onClick={onLogout}>Logout</button>
+    
+    {showPopup && <NewCoursePopup onClose={handleClosePopup} />}
     </div>
   );
 }
