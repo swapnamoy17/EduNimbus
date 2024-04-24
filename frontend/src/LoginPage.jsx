@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 function LoginPage() {
   useEffect(() => {
     // Construct the Hosted UI URL
+    console.log("inside login page")
     const domain = process.env.REACT_APP_COGNITO_DOMAIN; // Replace with your actual domain
     const clientId = process.env.REACT_APP_COGNITO_CLIENT_ID; // Replace with your actual client ID
     const responseType = 'code'; // You can use 'code' for authorization code grant flow
