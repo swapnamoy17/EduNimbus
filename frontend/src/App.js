@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import StudentDashboard from './StudentDashboard';
 import InstructorDashboard from './InstructorDashboard';
 import LoginPage from './LoginPage';
-import { jwtDecode } from 'jwt-decode';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -17,15 +17,16 @@ function App() {
       const clientId = process.env.REACT_APP_COGNITO_CLIENT_ID; 
       const redirectUri = encodeURIComponent('http://localhost:3000/dashboard');
       const code = params.get('code');
+      console.log("inside useeffect 1......params: ", params)
       if (code) {
         try {
-          console.log("Inside useEffect try")
+          console.log("Inside useEffect try");
           const response = await fetch(`https://${domain}/oauth2/token`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `grant_type=authorization_code&client_id=${clientId}=${code}&redirect_uri=${redirectUri}`
+            body: `grant_type=authorization_code&client_id=${clientId}&code=${code}&redirect_uri=${redirectUri}`
           });
           const data = await response.json();
           if (data.id_token) {
@@ -40,7 +41,7 @@ function App() {
     };
 
     handleAuthentication();
-  }, []);
+  }, []);  // Consider what might require re-authentication or moving logic to a callable function.
 
   const getDashboard = () => {
     if (role === 'Instructors') {
