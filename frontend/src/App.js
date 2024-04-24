@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { jwtDecode } from 'jwt-decode';
 import StudentDashboard from './StudentDashboard';
 import InstructorDashboard from './InstructorDashboard';
+import InstructorCourse from './InstructorCourse';
 import LoginPage from './LoginPage';
 
 function App() {
@@ -58,6 +59,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={user ? getDashboard() : <Navigate to="/" />} />
+        <Route path="/instructer-dashboard" element={<InstructorDashboard />} />
+        <Route path="/instructer-course" element={<InstructorCourse />} />
       </Routes>
     </Router>
   );

@@ -1,0 +1,82 @@
+.instructor-course {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .instructor-header {
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo {
+    /* Adjust the width and height as per your logo's dimensions */
+    width: 50px;
+    height: 50px;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-profile span {
+    margin-right: 10px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  h1 {
+    margin-left: 20px;
+  }
+  
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .ppt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .add-new {
+    background-color: #e0e0e0;
+    cursor: pointer;
+  }
+  
