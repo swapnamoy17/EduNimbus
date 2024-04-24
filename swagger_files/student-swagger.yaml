@@ -1,11 +1,11 @@
 openapi: 3.0.0
 info:
-  title: Student APIs
-  description: API endpoints for the Student Dashboard and operations.
+  title: Student and Instructor Course Management APIs
+  description: 'APIs designed to manage course content and student dashboard operations including videos, quizzes, PPTs, course recommendations, and more.'
   version: 1.0.0
 servers:
   - url: /v1/student
-    description: Base path for student-related operations
+    description: Base path for student and instructor-related operations
 paths:
   /courses:
     get:
@@ -68,6 +68,155 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /courses/videos:
+    get:
+      summary: Retrieve a list of videos.
+      description: This endpoint retrieves a list of videos with their names and thumbnail URLs.
+      tags:
+        - Videos
+      operationId: getVideos
+      parameters:
+        - name: courseId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the course.
+      responses:
+        '200':
+          description: A list of videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideosResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /courses/videos/{videoId}:
+    get:
+      summary: Stream a specific video
+      description: This endpoint streams a specific video by its ID directly via CloudFront, which is mapped to an S3 bucket. The API endpoint itself should be used as the src attribute in a video tag for direct streaming.
+      tags:
+        - Videos
+      operationId: streamVideoById
+      parameters:
+        - name: videoId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the video.
+      responses:
+        '200':
+          description: Video streaming initiated.
+          content:
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+                description: The video stream in MP4 format.
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Video not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /courses/transcripts:
+    get:
+      summary: Retrieve transcript for a video.
+      description: This endpoint retrieves the transcript for a video.
+      tags:
+        - Transcripts
+      operationId: getTranscripts
+      parameters:
+        - name: videoId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the video.
+      responses:
+        '200':
+          description: Transcript
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptsResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /courses/quizzes:
+    get:
+      summary: Retrieve a list of quizzes.
+      description: This endpoint retrieves a list of quiz names available to the instructor.
+      tags:
+        - Quizzes
+      operationId: getQuizzes
+      parameters:
+        - name: courseId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the course.
+      responses:
+        '200':
+          description: A list of quizzes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizzesResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /courses/ppts:
+    get:
+      summary: Retrieve a list of PPTs.
+      description: This endpoint retrieves a list of PPTs with their names.
+      tags:
+        - PPTs
+      operationId: getPPTs
+      parameters:
+        - name: courseId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the course.
+      responses:
+        '200':
+          description: A list of PPTs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PPTsResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Course:
@@ -83,6 +232,61 @@ components:
           type: string
         rating:
           type: integer
+    VideosResponse:
+      type: object
+      properties:
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video'
+    QuizzesResponse:
+      type: object
+      properties:
+        quizzes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Quiz'
+    PPTsResponse:
+      type: object
+      properties:
+        ppts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PPT'
+    TranscriptsResponse:
+      type: object
+      properties:
+        transcript:
+          type: string
+        videoId:
+          type: string
+        awsTranscribeLink:
+          type: string
+    Video:
+      type: object
+      properties:
+        name:
+          type: string
+        thumbnail_url:
+          type: string
+        id:
+          type: string
+    Quiz:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+    PPT:
+      type: object
+      properties:
+        name:
+          type: string
+        thumbnail_url:
+          type: string
+        id:
+          type: string
     Error:
       type: object
       properties:
