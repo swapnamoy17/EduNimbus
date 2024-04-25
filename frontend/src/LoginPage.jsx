@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { authenticate } from './authenticate';
+import './LoginPage.css';
 
 const LoginPage = ({ setUserGroups, setUser }) => {
 
@@ -111,6 +112,10 @@ const LoginPage = ({ setUserGroups, setUser }) => {
   return (
     <div className="login">
       <div className='form'>
+        <div className="header-logo">
+          <img src="/edu-nimbus.png" alt="EduNimbus Logo" /> {/* Adjust the src as needed */}
+          <span className="header-title">EduNimbus</span>
+        </div>
         <div className="formfield">
           <input
             value={email}
