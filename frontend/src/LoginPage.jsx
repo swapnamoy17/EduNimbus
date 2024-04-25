@@ -4,6 +4,12 @@ import { authenticate } from './authenticate';
 
 const LoginPage = ({ setUserGroups, setUser }) => {
 
+  const EMAIL = "Email"
+  const PASSWORD = "Password"
+  const NEW_PASSWORD = "New Password"
+  const EMAIL_REQUIRED = "Email is required"
+  const PASSWORD_REQUIRED = "Password is required"
+  const PASSWORD_LENGTH_REQUIRED = "Password must be at least 6 characters"
   const NEW_PASSWORD_REQUIRED = "New password required"
 
   const Navigate = useNavigate();
@@ -18,13 +24,13 @@ const LoginPage = ({ setUserGroups, setUser }) => {
   const [cognitoUser, setCognitoUser] = useState(null);
 
   const formInputChange = (formField, value) => {
-    if (formField === "email") {
+    if (formField === EMAIL) {
       setEmail(value);
     }
-    if (formField === "password") {
+    if (formField === PASSWORD) {
       setPassword(value);
     }
-    if (formField === "newPassword") {
+    if (formField === NEW_PASSWORD) {
         setNewPassword(value);
     }
   };
@@ -32,21 +38,21 @@ const LoginPage = ({ setUserGroups, setUser }) => {
   const validation = () => {
     return new Promise((resolve, reject) => {
       if (email === '' && password === '') {
-        setEmailErr("Email is Required");
-        setPasswordErr("Password is required")
-        resolve({ email: "Email is Required", password: "Password is required" });
+        setEmailErr(EMAIL_REQUIRED);
+        setPasswordErr(PASSWORD_REQUIRED)
+        resolve({ email: EMAIL_REQUIRED, password: PASSWORD_REQUIRED });
       }
       else if (email === '') {
-        setEmailErr("Email is Required")
-        resolve({ email: "Email is Required", password: "" });
+        setEmailErr(EMAIL_REQUIRED)
+        resolve({ email: EMAIL_REQUIRED, password: "" });
       }
       else if (password === '') {
-        setPasswordErr("Password is required")
-        resolve({ email: "", password: "Password is required" });
+        setPasswordErr(PASSWORD_REQUIRED)
+        resolve({ email: "", password: PASSWORD_REQUIRED });
       }
       else if (password.length < 6) {
-        setPasswordErr("must be 6 character")
-        resolve({ email: "", password: "must be 6 character" });
+        setPasswordErr(PASSWORD_LENGTH_REQUIRED)
+        resolve({ email: "", password: PASSWORD_LENGTH_REQUIRED });
       }
       else {
         resolve({ email: "", password: "" });
@@ -56,7 +62,7 @@ const LoginPage = ({ setUserGroups, setUser }) => {
 
   const handleNewPassword = () => {
     if (newPassword.length < 6) {
-        setNewPasswordErr('Password must be at least 6 characters');
+        setNewPasswordErr(PASSWORD_LENGTH_REQUIRED);
         return;
     }
     if (cognitoUser && cognitoUser.completeNewPasswordChallenge) {
@@ -108,29 +114,29 @@ const LoginPage = ({ setUserGroups, setUser }) => {
         <div className="formfield">
           <input
             value={email}
-            onChange={(e) => formInputChange("email", e.target.value)}
-            label="Email"
-            helperText={emailErr}
+            onChange={(e) => formInputChange(EMAIL, e.target.value)}
+            label={EMAIL}
+            placeholder={EMAIL}
           />
           <div>{emailErr}</div>
         </div>
         <div className='formfield'>
           <input
             value={password}
-            onChange={(e) => { formInputChange("password", e.target.value) }}
-            type="password"
-            label="Password"
-            helperText={passwordErr}
+            onChange={(e) => { formInputChange(PASSWORD, e.target.value) }}
+            type={PASSWORD}
+            label={PASSWORD}
+            placeholder={PASSWORD}
           />
           <div>{passwordErr}</div>
         </div>
         {loginErr === NEW_PASSWORD_REQUIRED && (
           <div className='formfield'>
             <input
-              type="password"
+              type={PASSWORD}
               value={newPassword}
-              onChange={(e) => formInputChange("newPassword", e.target.value)}
-              placeholder="New Password"
+              onChange={(e) => formInputChange(NEW_PASSWORD, e.target.value)}
+              placeholder={NEW_PASSWORD}
             />
             <div>{newPasswordErr}</div>
             <button onClick={handleNewPassword}>Set New Password</button>
