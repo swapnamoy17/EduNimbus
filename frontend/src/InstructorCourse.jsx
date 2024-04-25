@@ -4,7 +4,8 @@ import SambitSAvatar from './sambit.jpeg';
 import './InstructorCourse.css';
 import NewQuizPopup from './newQuizPopup';
 import NewPPTPopup from './newPPTPopup';
-import NewVideoPopup from './NewCoursePopup';
+import NewVideoPopup from './newVideoPopup';
+import { Link } from 'react-router-dom';
 // import SampleVideo from './sample-video.mp4';
 // import SampleBand from './sample-band.jpg';
 
@@ -77,7 +78,9 @@ const handleClosePopupVideo = () => {
         <div className="instructor-course">
         <header className="instructor-header">
             <div className='header-content'>
-        <img src="/edu-nimbus.png" alt="Logo" className="logo" />
+            <Link to="/dashboard">
+      <img src="/edu-nimbus.png" alt="Logo" className="logo" />
+    </Link>
         <div className='course-name'>
             <span>How to Sleep</span>
         </div>

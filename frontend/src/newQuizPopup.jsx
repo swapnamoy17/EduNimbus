@@ -4,25 +4,38 @@ import './NewCoursePopup.css'; // make sure to create appropriate CSS for this
 function NewQuizPopup({ onClose }) {
     const [quizName, setQuizName] = useState('');
   // Assuming these are your available tags
-  const availableTags = ['AI', 'Machine Learning', 'Data Science', 'Big Data', 'Analytics'];
-  const [selectedTags, setSelectedTags] = useState([]);
+  const availableVideos = [
+    {
+      id: '1',
+      title: 'Video 1'
+    },
+    {
+      id: '2',
+      title: 'Video 2'
+    },
+    {
+      id: '3',
+      title: 'Video 3'
+    }
+  ]
+  const [selectedVideos, setSelectedVideos] = useState([]);
 
   const handleSubmit = () => {
     // Logic to handle submission of the new course
-    console.log(quizName, selectedTags);
+    console.log(quizName, selectedVideos);
     // Close the popup after submitting
     onClose();
   };
 
-  const toggleTag = (tag) => {
-    setSelectedTags(selectedTags.includes(tag)
-      ? selectedTags.filter(t => t !== tag)
-      : [...selectedTags, tag]);
+  const toggleVideo = (video) => {
+    setSelectedVideos(selectedVideos.includes(video)
+      ? selectedVideos.filter(t => t !== video)
+      : [...selectedVideos, video]);
   };
 
   return (
     <div className="popup-backdrop">
-      <div className="popup-content">
+      <div className="quiz-ppt-popup-content">
         <h2>New Quiz</h2>
         <input
           type="text"
@@ -30,14 +43,14 @@ function NewQuizPopup({ onClose }) {
           value={quizName}
           onChange={(e) => setQuizName(e.target.value)}
         />
-        <div className="tags-container">
-          {availableTags.map((tag, index) => (
+        <div className="video-tags-container">
+          {availableVideos.map((video, index) => (
             <div
               key={index}
-              className={`tag ${selectedTags.includes(tag) ? 'selected' : ''}`}
-              onClick={() => toggleTag(tag)}
+              className={`tag ${selectedVideos.includes(video.title) ? 'selected' : ''}`}
+              onClick={() => toggleVideo(video.title)}
             >
-              {tag}
+              {video.title}
             </div>
           ))}
         </div>
