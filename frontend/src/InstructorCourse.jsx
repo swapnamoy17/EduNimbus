@@ -6,10 +6,12 @@ import NewQuizPopup from './newQuizPopup';
 import NewPPTPopup from './newPPTPopup';
 import NewVideoPopup from './newVideoPopup';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // import SampleVideo from './sample-video.mp4';
 // import SampleBand from './sample-band.jpg';
 
 function InstructorCourse() {
+    const { courseId } = useParams();
   const [quizData, setQuizData] = useState([]);
   const [videoData, setVideoData] = useState([]);
   const [pptData, setPPTData] = useState([]);
