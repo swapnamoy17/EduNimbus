@@ -20,7 +20,7 @@ export const authenticate = (Email, Password) => {
                 const idToken = result.getIdToken().getJwtToken();
                 const decodedToken = jwtDecode(idToken);
                 const groups = decodedToken['custom:Role'] || [];
-                resolve({ result, groups });  // Resolve both the auth result and the groups
+                resolve({ user, result, groups, decodedToken });
             },
             onFailure: (err) => {
                 console.log("login failed", err);

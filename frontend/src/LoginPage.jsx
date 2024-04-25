@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { authenticate } from './authenticate';
 import './LoginPage.css';
+import { useUserActions } from './redux/useUserActions';
 
-const LoginPage = ({ setUserGroups, setUser }) => {
+const LoginPage = () => {
 
   const EMAIL = "Email"
   const PASSWORD = "Password"
@@ -12,6 +13,7 @@ const LoginPage = ({ setUserGroups, setUser }) => {
   const PASSWORD_REQUIRED = "Password is required"
   const PASSWORD_LENGTH_REQUIRED = "Password must be at least 6 characters"
   const NEW_PASSWORD_REQUIRED = "New password required"
+  const ROLE_NOT_ASSIGNED = "Role not assigned"
 
   const Navigate = useNavigate();
 
@@ -23,6 +25,7 @@ const LoginPage = ({ setUserGroups, setUser }) => {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordErr, setNewPasswordErr] = useState('');
   const [cognitoUser, setCognitoUser] = useState(null);
+  const { updateUser, updateUserGroups, updateIdToken } = useUserActions();
 
   const formInputChange = (formField, value) => {
     if (formField === EMAIL) {
@@ -89,13 +92,18 @@ const LoginPage = ({ setUserGroups, setUser }) => {
         .then((res) => {
             if (res.email === '' && res.password === '') {
                 authenticate(email, password)
-                    .then(({ groups, user, userAttributes, requiredAttributes, newPasswordRequired }) => {
+                    .then(({ groups, user, decodedToken, userAttributes, requiredAttributes, newPasswordRequired }) => {
                         if (newPasswordRequired) {
                             setCognitoUser(user);
                             setLoginErr(NEW_PASSWORD_REQUIRED);
+                        } else if (!groups || groups.length === 0) {
+                            console.log("User authentication successful but no role assigned.")
+                            setLoginErr(ROLE_NOT_ASSIGNED)
                         } else {
                             setLoginErr('');
-                            setUserGroups(groups);
+                            updateUser(user);
+                            updateUserGroups(groups);
+                            updateIdToken(decodedToken)
                             console.log("User groups: ", groups);
                             Navigate('/dashboard');
                         }

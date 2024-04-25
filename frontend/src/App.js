@@ -7,12 +7,13 @@ import InstructorDashboard from './InstructorDashboard';
 import InstructorCourse from './InstructorCourse';
 import StudentDashboard from './StudentDashboard';
 import { logout } from './authenticate';
+import { useUserState } from './redux/useUserState';
 
 import './App.css';
 import userpool from './userpool';
 
 function App() {
-  const [userGroups, setUserGroups] = useState([]);
+  const { userGroups } = useUserState();
 
   useEffect(()=>{
     let user=userpool.getCurrentUser();
@@ -22,6 +23,7 @@ function App() {
   },[]);
 
   const getDashboard = () => {
+    console.log("getdashboard() func...userGroups: ", userGroups)
     if (userGroups.includes('Instructor')) {
         return <InstructorDashboard onLogout={logout} />;
     } else if (userGroups.includes('Student')) {
@@ -36,7 +38,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />}/>
         <Route path='/signup' element={<Signup />}/>
-        <Route path='/login' element={<Login setUserGroups={setUserGroups} />}/>
+        <Route path='/login' element={<Login />}/>
         <Route path="/dashboard" element={getDashboard()} />
         <Route path="/ins-course/:courseId" element={<InstructorCourse />} />
       </Routes>
