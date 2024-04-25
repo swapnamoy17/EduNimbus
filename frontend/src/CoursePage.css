@@ -1,0 +1,98 @@
+/* CoursePage.css */
+.course-page {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+  }
+  
+  .main-content {
+    display: flex;
+  }
+  
+  .video-player-container {
+    flex-grow: 1;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .video-placeholder {
+    width: 60%; /* Adjusted width */
+    height: 300px; /* Adjust as necessary */
+    background-color: #ddd; /* Placeholder color */
+    display: inline-block; /* Changed to inline-block */
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar {
+    width: 35%; /* Adjust as necessary */
+    padding: 20px;
+    display: inline-block; /* Changed to inline-block */
+    vertical-align: top; /* Align with the video player */
+  }
+  
+  .videos-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .videos-list li {
+    padding: 10px;
+    background-color: #efefef;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .videos-list li:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .section-title {
+    text-align: left; /* Align the section titles to the left */
+  }
+  
+  .quizzes-section, .ppts-section {
+    margin-top: 20px;
+    text-align: left; /* Align the content to the left */
+  }
+  
+  .quizzes-list, .ppts-list {
+    display: flex; /* Align items inline */
+    flex-wrap: wrap; /* Allow items to wrap to next line on small screens */
+    padding: 0;
+    margin: 0; /* Remove default margin */
+  }
+  
+  .quiz-item, .ppt-item {
+    background-color: #f7f7f7;
+    border: 1px solid #e1e1e1;
+    padding: 8px 16px;
+    margin-right: 10px; /* Space between items */
+    margin-bottom: 10px; /* Space between lines when they wrap */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .quiz-item:hover, .ppt-item:hover {
+    background-color: #e1e
+  }
