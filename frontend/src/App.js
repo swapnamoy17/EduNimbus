@@ -59,6 +59,9 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/dashboard" element={user ? getDashboard() : <Navigate to="/" />} />
+        <Route path="/ins-dash" element={<InstructorDashboard />} />
+        <Route path="/ins-course" element={<InstructorCourse />} />
+        <Route path="/stu" element={<StudentDashboard />} />
       </Routes>
     </Router>
   );
