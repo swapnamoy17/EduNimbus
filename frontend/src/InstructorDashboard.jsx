@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import NewCoursePopup from './NewCoursePopup';
 import './InstructorDashboard.css';
+import { useNavigate } from 'react-router-dom';
 
 const courseData = [
   // Placeholder for course data. You would fetch this data from an API.
@@ -15,6 +16,11 @@ const courseData = [
 
 function InstructorDashboard() {
   const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate(); // Hook to navigate to different routes
+
+  const handleCourseClick = (courseId) => {
+    navigate(`/ins-course/${courseId}`); // Navigating to the course page
+  };
 
   const handleAddNewClick = () => {
     setShowPopup(true);
@@ -39,8 +45,8 @@ function InstructorDashboard() {
       
       <div className="courses-grid">
         {courseData.map((course) => (
-          <div key={course.id} className="course-card">
-            <img src={course.thumbnailUrl} alt={course.title} />
+          <div key={course.id} className="course-card" onClick={() => handleCourseClick(course.id)}>
+            <img src={course.thumbnailUrl} alt={course.title}/>
             <span>{course.title}</span>
           </div>
         ))}

@@ -38,7 +38,7 @@ function App() {
         <Route path='/signup' element={<Signup />}/>
         <Route path='/login' element={<Login setUserGroups={setUserGroups} />}/>
         <Route path="/dashboard" element={getDashboard()} />
-        <Route path="/ins-course" element={<InstructorCourse />} />
+        <Route path="/ins-course/:courseId" element={<InstructorCourse />} />
       </Routes>
     </BrowserRouter>
   );
