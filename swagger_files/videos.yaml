@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: Video API
+  description: 'APIs designed to manage videos'
+  version: 1.0.0
+servers:
+  - url: /v1/videos
+    description: Base path for video related operations
+paths:
+  /:
+    get:
+      summary: Retrieve a list of videos.
+      description: This endpoint retrieves a list of videos with their names and thumbnail URLs.
+      tags:
+        - Videos
+      operationId: getVideos
+      parameters:
+        - name: courseId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the course.
+      responses:
+        '200':
+          description: A list of videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideosResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      description: This endpoint allows for the addition of a new video with a name
+        and thumbnail URL.
+      operationId: createVideo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewVideoRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+          description: Video created
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal Server Error
+      summary: Create a new video.
+      tags:
+      - Videos
+  /stream:
+    get:
+      summary: Stream a specific video
+      description: This endpoint streams a specific video by its ID directly via CloudFront, which is mapped to an S3 bucket. The API endpoint itself should be used as the src attribute in a video tag for direct streaming.
+      tags:
+        - Videos
+      operationId: streamVideoById
+      parameters:
+        - name: videoId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the video.
+      responses:
+        '200':
+          description: Video streaming initiated.
+          content:
+            video/mp4:
+              schema:
+                type: string
+                format: binary
+                description: The video stream in MP4 format.
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Video not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /transcripts:
+    get:
+      summary: Retrieve transcript for a video.
+      description: This endpoint retrieves the transcript for a video.
+      tags:
+        - Transcripts
+      operationId: getTranscripts
+      parameters:
+        - name: videoId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the video.
+      responses:
+        '200':
+          description: Transcript
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptsResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    VideosResponse:
+      type: object
+      properties:
+        videos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video'
+    TranscriptsResponse:
+      type: object
+      properties:
+        transcript:
+          type: string
+        videoId:
+          type: string
+        awsTranscribeLink:
+          type: string
+    Video:
+      type: object
+      properties:
+        name:
+          type: string
+        thumbnail_url:
+          type: string
+        id:
+          type: string
+    NewVideoRequest:
+      properties:
+        name:
+          description: The name of the video.
+          type: string
+        video_file:
+          type: string
+          format: binary
+          description: The actual video file.
+      type: object
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          description: Error message detailing what went wrong.
