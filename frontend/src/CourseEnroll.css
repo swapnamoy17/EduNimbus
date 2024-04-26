@@ -1,0 +1,100 @@
+/* CourseEnroll.css */
+.course-summary-page {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .course-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f0f0f0;
+  }
+  
+  .student-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+  }
+  
+  .course-content {
+    display: flex;
+    margin: 20px;
+  }
+  
+  .video-player-section {
+    flex-grow: 2;
+    margin-right: 20px;
+  }
+  
+  .video-container {
+    width: 100%;
+    height: 500px;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .enrollment-rating-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Align button and ratings horizontally */
+     /* Add space between the button and ratings section */
+  }
+  
+  .enroll-button {
+    padding: 10px 20px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .enroll-button:hover {
+    background-color: #005f73;
+  }
+  
+  .ratings-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Add space between the header and stars */
+  }
+  
+  .ratings-header {
+    margin: 0;
+  }
+  
+  .stars {
+    display: flex;
+    align-items: center;
+    margin: 0; /* Remove margin to reduce space */
+  }
+  
+  .star {
+    font-size: 25px;
+    color: #ddd;
+    margin-right: 5px;
+  }
+  
+  .star.filled {
+    color: #ffc107;
+  }
+  
+  .summary-section {
+    flex-basis: 1;
+    padding: 0 20px;
+  }
+  
+  h2 {
+    margin-top: 0;
+  }
+  
