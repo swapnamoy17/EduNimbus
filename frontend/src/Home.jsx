@@ -1,23 +1,22 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Home.css';
 
 const Home = () => {
-    const Navigate = useNavigate();
+    const navigate = useNavigate();
     return (
-        <>
-            <div className='home'>
-                <h3>Welcome</h3>
-                <div className='homeButtons'>
-                    <button style={{margin:'10px'}} variant='contained' onClick={()=>Navigate('/signup')}>
-                        Signup
-                    </button>
-                    <button style={{margin:'10px'}} variant='contained' onClick={()=>Navigate('/login')}>
-                        Login
-                    </button>
-                </div>
+        <div className='home'>
+            <h3>Welcome</h3>
+            <div className='homeButtons'>
+                <button onClick={() => navigate('/signup')}>
+                    Signup
+                </button>
+                <button onClick={() => navigate('/login')}>
+                    Login
+                </button>
             </div>
-        </>
-    )
+        </div>
+    );
 }
 
-export default Home
+export default Home;

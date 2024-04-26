@@ -65,7 +65,22 @@
     color: #333;
     margin-left: 10px;
   }
-  
-  /* If there are specific colors associated with EduNimbus branding, 
-     they should be applied to the appropriate elements. */
+
+  .radio-group {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .radio-label {
+    margin-right: 15px;
+  }
+
+  .error-message {
+    display: block;
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+  }
+
   

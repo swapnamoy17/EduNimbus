@@ -131,7 +131,7 @@ const LoginPage = () => {
             label={EMAIL}
             placeholder={EMAIL}
           />
-          <div>{emailErr}</div>
+          <div className="error-message">{emailErr}</div>
         </div>
         <div className='formfield'>
           <input
@@ -141,7 +141,7 @@ const LoginPage = () => {
             label={PASSWORD}
             placeholder={PASSWORD}
           />
-          <div>{passwordErr}</div>
+          <div className="error-message">{passwordErr}</div>
         </div>
         {loginErr === NEW_PASSWORD_REQUIRED && (
           <div className='formfield'>
@@ -160,7 +160,7 @@ const LoginPage = () => {
             <button type='submit' variant='contained' onClick={handleClick}>Login</button>
           </div>
         }
-        <div>{loginErr}</div>
+        <div className="error-message">{loginErr}</div>
       </div>
 
     </div>

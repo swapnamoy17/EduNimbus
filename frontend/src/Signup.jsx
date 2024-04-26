@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {CognitoUserAttribute } from 'amazon-cognito-identity-js';
-
+import './LoginPage.css';
 import userpool from './userpool';
 
 const Signup = () => {
@@ -24,6 +24,7 @@ const Signup = () => {
   const [role, setRole] = useState('');
   const [emailErr, setEmailErr] = useState('');
   const [passwordErr, setPasswordErr] = useState('');
+  const [roleErr, setRoleErr] = useState('');
 
   const formInputChange = (formField, value) => {
     if (formField === EMAIL) {
@@ -31,7 +32,8 @@ const Signup = () => {
     }
     if (formField === PASSWORD) {
       setPassword(value);
-    } else if (formField === ROLE) {
+    }
+    if (formField === ROLE) {
       setRole(value);
     }
   };
@@ -52,6 +54,7 @@ const Signup = () => {
         setPasswordErr(PASSWORD_LENGTH_REQUIRED)
         resolve({email : "",password : PASSWORD_LENGTH_REQUIRED});
       } else if (!role) {
+        setRoleErr(ROLE_REQUIRED);
         reject({role: ROLE_REQUIRED});
       } else {
         resolve({email: "",password: "", role: ""});
@@ -63,6 +66,7 @@ const Signup = () => {
   const handleClick = (e) => {
     setEmailErr("");
     setPasswordErr("");
+    setRoleErr("");
     validation()
       .then((res) => {
         if (res.email === '' && res.password === '' && res.role === '') {
@@ -94,39 +98,46 @@ const Signup = () => {
   }
 
   return (
-    <div className="signup">
-
+    <div className="login">
       <div className='form'>
         <div className="formfield">
           <input
             value={email}
             onChange={(e) => formInputChange(EMAIL, e.target.value)}
-            label = {EMAIL}
-            placeholder = {EMAIL}
+            placeholder={EMAIL}
+            className="input-field"
           />
-          <div>{emailErr}</div>
+          <div className="error-message">{emailErr}</div>
         </div>
         <div className='formfield'>
           <input
+            type="password"
             value={password}
-            onChange={(e) => { formInputChange(PASSWORD, e.target.value) }}
-            type = {PASSWORD}
-            label = {PASSWORD}
-            placeholder = {PASSWORD}
+            onChange={(e) => formInputChange(PASSWORD, e.target.value)}
+            placeholder={PASSWORD}
+            className="input-field"
           />
-          <div>{passwordErr}</div>
+          <div className="error-message">{passwordErr}</div>
         </div>
-        <div className='formfield'>
-          <label><input type="radio" value = {STUDENT} checked={role === STUDENT} onChange={(e) => formInputChange(ROLE, e.target.value)} /> {STUDENT} </label>
-          <label><input type="radio" value = {INSTRUCTOR} checked={role === INSTRUCTOR} onChange={(e) => formInputChange(ROLE, e.target.value)} /> {INSTRUCTOR} </label>
+        <div className='formfield radio-group'>
+          <label className="radio-label">
+            <input type="radio" value={STUDENT} checked={role === STUDENT} onChange={(e) => formInputChange(ROLE, e.target.value)} />
+            {STUDENT}
+          </label>
+          <label className="radio-label">
+            <input type="radio" value={INSTRUCTOR} checked={role === INSTRUCTOR} onChange={(e) => formInputChange(ROLE, e.target.value)} />
+            {INSTRUCTOR}
+          </label>
         </div>
+        {roleErr && <div className="error-message">{roleErr}</div>}
         <div className='formfield'>
-          <button type='submit' variant='contained' onClick={handleClick}>Signup</button>
+          <button type='submit' onClick={handleClick} className="submit-button">
+            Signup
+          </button>
         </div>
       </div>
-
     </div>
-  )
+  );
 }
 
 export default Signup
