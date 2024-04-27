@@ -100,13 +100,8 @@ paths:
           description: The unique identifier for the video.
       responses:
         '200':
-          description: Video streaming initiated.
-          content:
-            video/mp4:
-              schema:
-                type: string
-                format: binary
-                description: The video stream in MP4 format.
+        description: Video streaming initiated.
+        content: {}
         '400':
           description: Invalid input
           content:
