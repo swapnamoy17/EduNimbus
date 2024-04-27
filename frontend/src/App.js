@@ -6,8 +6,11 @@ import Login from './LoginPage';
 import InstructorDashboard from './InstructorDashboard';
 import InstructorCourse from './InstructorCourse';
 import StudentDashboard from './StudentDashboard';
+import CoursePage from './CoursePage';
+import CourseSummaryPage from './CourseEnroll';
 import { logout } from './authenticate';
 import { useUserState } from './redux/useUserState';
+
 
 import './App.css';
 import userpool from './userpool';
@@ -41,6 +44,8 @@ function App() {
         <Route path='/login' element={<Login />}/>
         <Route path="/dashboard" element={getDashboard()} />
         <Route path="/ins-course/:courseId" element={<InstructorCourse />} />
+        <Route path="/course/:id" element={<CoursePage />} />
+        <Route path="/summary/:id" element={<CourseSummaryPage />} />
       </Routes>
     </BrowserRouter>
   );

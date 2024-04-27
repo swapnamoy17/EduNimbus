@@ -1,6 +1,6 @@
 import React from 'react';
 import './StudentDashboard.css'; // Make sure to create a corresponding CSS file
-
+import { Link } from 'react-router-dom';
 // Mock data for courses
 const enrolledCourses = [
   {
@@ -30,14 +30,14 @@ const recommendedCourses = [
 
 function StudentDashboard({ onLogout, user }) {
   // Render a single course card
-  const renderCourse = (course) => (
-    <div className="course-card" key={course.id}>
-      <img src={course.thumbnail} alt={course.title} />
-      <div className="course-info">
-        <h3>{course.title}</h3>
-        <p>{course.instructor}</p>
-      </div>
-    </div>
+  const renderCourse = (course, type) => (
+    <Link to={type === 'enrolled' ? `/course/${course.id}` : `/summary/${course.id}`} className="course-card" key={course.id}>
+            <img src={course.thumbnail} alt={course.title} />
+            <div className="course-info">
+                <h3>{course.title}</h3>
+                <p>{course.instructor}</p>
+            </div>
+        </Link>
   );
 
   return (
@@ -50,16 +50,16 @@ function StudentDashboard({ onLogout, user }) {
         </div>
       </header>
       <section className="course-section">
-        <h2>Enrolled Courses</h2>
-        <div className="course-container">
-          {enrolledCourses.map(renderCourse)}
-        </div>
+      <h2>Enrolled Courses</h2>
+      <div className="course-container">
+      {enrolledCourses.map(course => renderCourse(course, 'enrolled'))}
+      </div>
       </section>
       <section className="course-section">
-        <h2>Recommended Courses</h2>
-        <div className="course-container">
-          {recommendedCourses.map(renderCourse)}
-        </div>
+      <h2>Recommended Courses</h2>
+      <div className="course-container">
+      {recommendedCourses.map(course => renderCourse(course, 'recommended'))}
+      </div>
       </section>
       <button onClick={onLogout}>Logout</button>
     </div>

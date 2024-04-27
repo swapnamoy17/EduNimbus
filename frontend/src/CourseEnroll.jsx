@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import './CourseEnroll.css';
 
+const courses = [
+    { id: '1', name: 'Python Fundamentals', summary: 'Intro to Python', rating: 4 },
+    { id: '2', name: 'Advanced JavaScript', summary: 'Deep dive into JS', rating: 5 }
+];
+
 function CourseSummaryPage() {
-  const course = {
-    name: 'Course Name',
-    summary: 'This is a sample summary about a course on Java',
-    rating: 4, // Rating out of 5
-  };
+const { id } = useParams();
+const [course, setCourse] = useState(null);
+
+useEffect(() => {
+    const courseDetails = courses.find(course => course.id === id);
+    setCourse(courseDetails);
+}, [id]);
+
+if (!course) {
+    return <div>Loading...</div>;
+}
 
   // Helper to render stars based on rating
   const renderStars = (rating) => {
