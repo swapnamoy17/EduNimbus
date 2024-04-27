@@ -121,7 +121,7 @@ const LoginPage = () => {
     <div className="login">
       <div className='form'>
         <div className="header-logo">
-          <img src="/edu-nimbus.png" alt="EduNimbus Logo" /> {/* Adjust the src as needed */}
+          <img src="/edu-nimbus.png" alt="EduNimbus Logo" />
           <span className="header-title">EduNimbus</span>
         </div>
         <div className="formfield">

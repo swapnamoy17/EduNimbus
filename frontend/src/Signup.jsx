@@ -100,6 +100,10 @@ const Signup = () => {
   return (
     <div className="login">
       <div className='form'>
+        <div className="header-logo">
+          <img src="/edu-nimbus.png" alt="EduNimbus Logo" />
+          <span className="header-title">EduNimbus</span>
+        </div>
         <div className="formfield">
           <input
             value={email}
