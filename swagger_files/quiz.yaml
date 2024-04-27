@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  title: Quiz API
+  description: 'APIs designed to manage quizes'
+  version: 1.0.0
+servers:
+  - url: /v1/quizes
+    description: Base path for quiz related operations
+paths:
+  /:
+    get:
+      summary: Retrieve a list of quizes.
+      description: This endpoint retrieves a list of quizes with their names and thumbnail URLs.
+      tags:
+        - Quizes
+      operationId: getQuizes
+      parameters:
+        - name: courseId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the course.
+      responses:
+        '200':
+          description: A list of quizes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizesResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Course not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      description: This endpoint allows for the addition of a new quiz with a name
+        and thumbnail URL.
+      operationId: createQuiz
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewQuizRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quiz'
+          description: Quiz created
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Forbidden
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Internal Server Error
+      summary: Create a new quiz.
+      tags:
+      - Quizes
+  /quiz:
+    get:
+      summary: Open a specific quiz
+      description: This endpoint streams a specific video by its ID directly via CloudFront, which is mapped to an S3 bucket. The API endpoint itself should be used as the src attribute in a video tag for direct streaming.
+      tags:
+        - Quizes
+      operationId: openQuizById
+      parameters:
+        - name: quizId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the quiz.
+      responses:
+        '200':
+          description: A quize
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OneQuize'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Quiz not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    QuizesResponse:
+      type: object
+      properties:
+        quizes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Quiz'
+    Quiz:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+    OneQuize:
+      type: object
+      properties:
+        onequiz:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpenQuiz'
+    NewQuizRequest:
+      properties:
+        name:
+          description: The name of the quiz.
+          type: string
+        video_ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/Video'
+          description: The actual quiz file.
+      type: object
+    Video:
+      type: object
+      properties:
+        id:
+          type: string
+    OpenQuiz:
+      type: object
+      properties:
+        questionid:
+          type: string
+        question:
+          type: string
+        answer:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/Options'
+    Options:
+      type: object
+      properties:
+        optionId:
+          type: string
+        optionString:
+          type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          description: Error message detailing what went wrong.
