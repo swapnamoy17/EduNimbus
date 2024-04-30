@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+  title: PPTs
+  description: 'APIs designed to manage course content and student dashboard operations'
+  version: 1.0.0
+servers:
+  - url: /v1/ppts
+    description: Base path for student and instructor-related operations
+paths:
+    /:
+      get:
+        summary: Retrieve a list of PPTs.
+        description: This endpoint retrieves a list of PPTs with their names.
+        tags:
+          - PPTs
+        operationId: getPPTs
+        parameters:
+          - name: courseId
+            in: query
+            required: true
+            schema:
+              type: string
+            description: The unique identifier for the course.
+        responses:
+          '200':
+            description: A list of PPTs
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PPTsResponse'
+          '400':
+            description: Invalid input
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+                
+      post:
+        description: This endpoint allows for the addition of a new PPT with a specific name.
+        operationId: createPPT
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewPPTRequest'
+          required: true
+        responses:
+          '201':
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/PPT'
+            description: PPT created
+          '400':
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+            description: Bad Request
+          '401':
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+            description: Unauthorized
+          '403':
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+            description: Forbidden
+          '500':
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
+            description: Internal Server Error
+        summary: Create a new PPT.
+        tags:
+        - PPTs
+
+components:
+  schemas:
+    PPTsResponse:
+          type: object
+          properties:
+            ppts:
+              type: array
+              items:
+                $ref: '#/components/schemas/PPT'
+    NewPPTRequest:
+      properties:
+        name:
+          description: The name of the PPT.
+          type: string
+        video_ids:
+          description: A list of video IDs associated with this PPT.
+          items:
+            type: string
+          type: array
+      type: object
+    
+    PPT:
+      type: object
+      properties:
+        name:
+          type: string
+        S3_url:
+          type: string
+        id:
+          type: string
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          description: Error message detailing what went wrong.
