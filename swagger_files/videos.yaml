@@ -100,8 +100,11 @@ paths:
           description: The unique identifier for the video.
       responses:
         '200':
-        description: Video streaming initiated.
-        content: {}
+          description: Video streaming initiated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoStream'
         '400':
           description: Invalid input
           content:
@@ -159,6 +162,12 @@ components:
           type: string
         awsTranscribeLink:
           type: string
+    VideoStream:
+      type: object
+      properties:
+        video:
+          type: string
+          format: binary
     Video:
       type: object
       properties:
