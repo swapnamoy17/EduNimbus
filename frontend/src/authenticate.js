@@ -2,6 +2,8 @@ import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
 import userpool from './userpool';
 import { jwtDecode } from 'jwt-decode';
 
+const GROUP_ATTRIBUTE = "cognito:groups"
+
 export const authenticate = (Email, Password) => {
     return new Promise((resolve, reject) => {
         const user = new CognitoUser({
@@ -19,7 +21,7 @@ export const authenticate = (Email, Password) => {
                 console.log("login successful");
                 const idToken = result.getIdToken().getJwtToken();
                 const decodedToken = jwtDecode(idToken);
-                const groups = decodedToken['custom:Role'] || [];
+                const groups = decodedToken[GROUP_ATTRIBUTE] || [];
                 resolve({ user, result, groups, decodedToken });
             },
             onFailure: (err) => {

@@ -13,6 +13,9 @@ import './App.css';
 import userpool from './userpool';
 
 function App() {
+  const INSTRUCTOR_GROUP = "Instructors"
+  const STUDENT_GROUP = "Students"
+
   const { userGroups } = useUserState();
 
   useEffect(()=>{
@@ -24,9 +27,9 @@ function App() {
 
   const getDashboard = () => {
     console.log("getdashboard() func...userGroups: ", userGroups)
-    if (userGroups.includes('Instructor')) {
+    if (userGroups.includes(INSTRUCTOR_GROUP)) {
         return <InstructorDashboard onLogout={logout} />;
-    } else if (userGroups.includes('Student')) {
+    } else if (userGroups.includes(STUDENT_GROUP)) {
         return <StudentDashboard onLogout={logout} />;
     } else {
         return <Navigate to="/" />;
