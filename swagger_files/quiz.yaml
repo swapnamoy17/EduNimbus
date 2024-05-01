@@ -15,7 +15,7 @@ paths:
         - Quizes
       operationId: getQuizes
       parameters:
-        - name: courseId
+        - name: videoId
           in: query
           required: true
           schema:
