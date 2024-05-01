@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import './LoginPage.css';
 import userpool from './userpool';
+import axios from 'axios';
 
 const Signup = () => {
 
@@ -11,8 +12,8 @@ const Signup = () => {
   const EMAIL = "Email"
   const PASSWORD = "Password"
   const ROLE = "Role"
-  const STUDENT = "Student"
-  const INSTRUCTOR = "Instructor"
+  const STUDENT = "Students"
+  const INSTRUCTOR = "Instructors"
 
   const EMAIL_REQUIRED = "Email is required."
   const PASSWORD_REQUIRED = "Password is required."
@@ -63,6 +64,18 @@ const Signup = () => {
     });
   };
 
+  const addUserToGroup = async (username, groupname) => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_GATEWAY_DEV_ENDPOINT}/addUserToGroup`, {
+        username,
+        groupname
+      });
+      console.log('adding user to group response:', response.data);
+    } catch (error) {
+      console.error('Error adding user to group:', error.response);
+    }
+  };
+
   const handleClick = (e) => {
     setEmailErr("");
     setPasswordErr("");
@@ -89,6 +102,7 @@ const Signup = () => {
             } else {
               console.log('User Added Successfully: ', data);
               alert('User Added Successfully');
+              addUserToGroup(username, role)
               Navigate('/dashboard');
             }
           });
