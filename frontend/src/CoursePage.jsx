@@ -1,9 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CoursePage.css';
-import { getVideosForCourse } from './services/video';
+import { getVideosForCourse, streamVideo } from './services/video';
 
 function CoursePage() {
+
+  const [videoUrl, setVideoUrl] = useState('');
+
   const courseId = 1;
+  const videoId = 1;
   const videoLinks = ["Video 1", "Video 2", "Video 3", "Video 4"];
   const quizzes = ["Quiz 1", "Quiz 2"];
   const ppts = ["PPT 1", "PPT 2"];
@@ -11,6 +15,22 @@ function CoursePage() {
   useEffect(() => {
     console.log("use Effect for fetching videos for course: " + courseId)
     getVideosForCourse(courseId)
+  }, [])
+
+  useEffect(() => {
+    console.log("use Effect for fetching stream video for course: " + courseId)
+    
+    const fetchVideo = async () => {
+      try {
+        let response = await streamVideo(videoId);
+        console.log("streaming response: ", response);
+        setVideoUrl(response.video);
+      } catch (error) {
+        console.error("Failed to fetch video", error);
+      }
+    };
+
+    fetchVideo();
   }, [])
 
   return (
@@ -25,6 +45,9 @@ function CoursePage() {
       <div className="main-content">
         <div className="video-player-container">
           <div className="video-placeholder">Video Player</div>
+            <video width="320" height="240" key={videoUrl} controls>
+              {videoUrl && <source src={videoUrl} type="video/mp4" />}
+            </video>
           <h2>Docker & Kubernetes</h2>
           
           <div className="quizzes-section">

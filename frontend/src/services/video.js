@@ -10,4 +10,13 @@ const getVideosForCourse = async (courseId) => {
   }, videoApiClient);
 };
 
-export { getVideosForCourse };
+const streamVideo = async (videoId) => {
+    return makeApiCall({
+        method: 'get',
+        url: '/stream',
+        params: { videoId: videoId },
+        body: ''
+    }, videoApiClient);
+}
+
+export { getVideosForCourse, streamVideo };
