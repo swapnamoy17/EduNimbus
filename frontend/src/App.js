@@ -47,7 +47,7 @@ function App() {
         <Route path='/login' element={<Login />}/>
         <Route path="/dashboard" element={getDashboard()} />
         <Route path="/ins-course/:courseId" element={<InstructorCourse />} />
-        <Route path="/course/:id" element={<CoursePage />} />
+        <Route path="/course/:courseId" element={<CoursePage />} />
         <Route path="/summary/:id" element={<CourseSummaryPage />} />
       </Routes>
     </BrowserRouter>

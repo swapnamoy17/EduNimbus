@@ -1,37 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import './CoursePage.css';
 import { getVideosForCourse, streamVideo } from './services/video';
+import { useParams } from 'react-router-dom';
 
 function CoursePage() {
 
-  const [videoUrl, setVideoUrl] = useState('');
+  let { courseId } = useParams();
 
-  const courseId = 1;
-  const videoId = 1;
-  const videoLinks = ["Video 1", "Video 2", "Video 3", "Video 4"];
+  const [videoUrl, setVideoUrl] = useState('');
+  const [videoId, setVideoId] = useState('');
+  const [videoName, setVideoName] = useState('abcd');
+
+  const videos = [{
+                        "name": "Do you want ice-cream?",
+                        "id": 1
+                      },
+                      {
+                        "name": "Boring",
+                        "id": 2
+                      }];
   const quizzes = ["Quiz 1", "Quiz 2"];
   const ppts = ["PPT 1", "PPT 2"];
 
   useEffect(() => {
     console.log("use Effect for fetching videos for course: " + courseId)
     getVideosForCourse(courseId)
-  }, [])
+    if (courseId === '1') {
+      setVideoId(1);
+      setVideoName(videos.filter(video => video.id === 1)[0]?.name);
+    } else {
+      setVideoId(2);
+      setVideoName(videos.filter(video => video.id === 2)[0]?.name);
+    }
+  }, [courseId])
 
   useEffect(() => {
-    console.log("use Effect for fetching stream video for course: " + courseId)
-    
-    const fetchVideo = async () => {
-      try {
-        let response = await streamVideo(videoId);
-        console.log("streaming response: ", response);
-        setVideoUrl(response.video);
-      } catch (error) {
-        console.error("Failed to fetch video", error);
-      }
-    };
+    if (videoId) {
+      console.log("use Effect for fetching stream video: " + videoId + "for course: " + courseId)
+      const fetchVideo = async () => {
+        try {
+          let response = await streamVideo(videoId);
+          console.log("streaming response: ", response);
+          setVideoUrl(response.video);
+        } catch (error) {
+          console.error("Failed to fetch video", error);
+        }
+      };
 
-    fetchVideo();
-  }, [])
+      fetchVideo();
+    }
+  }, [videoId])
 
   return (
     <div className="course-page">
@@ -44,11 +62,12 @@ function CoursePage() {
       </header>
       <div className="main-content">
         <div className="video-player-container">
-          <div className="video-placeholder">Video Player</div>
-            <video width="320" height="240" key={videoUrl} controls>
+          <div className="video-placeholder">
+            <video key={videoUrl} controls>
               {videoUrl && <source src={videoUrl} type="video/mp4" />}
             </video>
-          <h2>Docker & Kubernetes</h2>
+          </div>
+          <h2>{videoName}</h2>
           
           <div className="quizzes-section">
             <h3 className="section-title">Quizzes</h3>
@@ -71,8 +90,8 @@ function CoursePage() {
           <div className="videos-list">
             <h3>Videos</h3>
             <ul>
-              {videoLinks.map((link, index) => (
-                <li key={index}>{link}</li>
+              {videos.map((video, index) => (
+                <li key={index}>{video.name}</li>
               ))}
             </ul>
           </div>
