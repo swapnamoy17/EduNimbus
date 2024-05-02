@@ -66,7 +66,7 @@ const Signup = () => {
 
   const addUserToGroup = async (username, groupname) => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_GATEWAY_DEV_ENDPOINT}/addUserToGroup`, {
+      const response = await axios.post(`${process.env.REACT_APP_SIGNUP_GATEWAY_ENDPOINT}/addUserToGroup`, {
         username,
         groupname
       });

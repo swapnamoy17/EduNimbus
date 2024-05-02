@@ -22,7 +22,7 @@ export const authenticate = (Email, Password) => {
                 const idToken = result.getIdToken().getJwtToken();
                 const decodedToken = jwtDecode(idToken);
                 const groups = decodedToken[GROUP_ATTRIBUTE] || [];
-                resolve({ user, result, groups, decodedToken });
+                resolve({ user, result, groups, idToken });
             },
             onFailure: (err) => {
                 console.log("login failed", err);

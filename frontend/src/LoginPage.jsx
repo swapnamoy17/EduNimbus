@@ -92,7 +92,7 @@ const LoginPage = () => {
         .then((res) => {
             if (res.email === '' && res.password === '') {
                 authenticate(email, password)
-                    .then(({ groups, user, decodedToken, userAttributes, requiredAttributes, newPasswordRequired }) => {
+                    .then(({ groups, user, idToken, userAttributes, requiredAttributes, newPasswordRequired }) => {
                         if (newPasswordRequired) {
                             setCognitoUser(user);
                             setLoginErr(NEW_PASSWORD_REQUIRED);
@@ -103,7 +103,8 @@ const LoginPage = () => {
                             setLoginErr('');
                             updateUser(user);
                             updateUserGroups(groups);
-                            updateIdToken(decodedToken)
+                            updateIdToken(idToken)
+                            localStorage.setItem('token', idToken);
                             console.log("User groups: ", groups);
                             Navigate('/dashboard');
                         }

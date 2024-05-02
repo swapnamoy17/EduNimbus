@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './CoursePage.css';
+import { getVideosForCourse } from './services/video';
 
 function CoursePage() {
+  const courseId = 1;
   const videoLinks = ["Video 1", "Video 2", "Video 3", "Video 4"];
   const quizzes = ["Quiz 1", "Quiz 2"];
   const ppts = ["PPT 1", "PPT 2"];
+
+  useEffect(() => {
+    console.log("use Effect for fetching videos for course: " + courseId)
+    getVideosForCourse(courseId)
+  }, [])
 
   return (
     <div className="course-page">
