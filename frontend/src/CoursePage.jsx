@@ -9,28 +9,28 @@ function CoursePage() {
 
   const [videoUrl, setVideoUrl] = useState('');
   const [videoId, setVideoId] = useState('');
-  const [videoName, setVideoName] = useState('abcd');
+  const [videoName, setVideoName] = useState('');
+  const [videos, setVideos] = useState([]);
 
-  const videos = [{
-                        "name": "Do you want ice-cream?",
-                        "id": 1
-                      },
-                      {
-                        "name": "Boring",
-                        "id": 2
-                      }];
   const quizzes = ["Quiz 1", "Quiz 2"];
   const ppts = ["PPT 1", "PPT 2"];
 
   useEffect(() => {
-    console.log("use Effect for fetching videos for course: " + courseId)
-    getVideosForCourse(courseId)
-    if (courseId === '1') {
-      setVideoId(1);
-      setVideoName(videos.filter(video => video.id === 1)[0]?.name);
-    } else {
-      setVideoId(2);
-      setVideoName(videos.filter(video => video.id === 2)[0]?.name);
+    if (courseId) {
+      console.log("use Effect for fetching videos for course: " + courseId)
+
+      const fetchAllVideos = async () => {
+        let response = await getVideosForCourse(courseId);
+        console.log("/ - get response: ", response);
+        const videos = response?.videos;
+        const firstVideoId = videos[0]?.id;
+        const videoName = videos.filter(video => video.id === firstVideoId)[0]?.name;
+        setVideoId(firstVideoId);
+        setVideoName(videoName);
+        setVideos(videos);
+      }
+
+      fetchAllVideos();
     }
   }, [courseId])
 
@@ -38,18 +38,19 @@ function CoursePage() {
     if (videoId) {
       console.log("use Effect for fetching stream video: " + videoId + "for course: " + courseId)
       const fetchVideo = async () => {
-        try {
-          let response = await streamVideo(videoId);
-          console.log("streaming response: ", response);
-          setVideoUrl(response.video);
-        } catch (error) {
-          console.error("Failed to fetch video", error);
-        }
+        let response = await streamVideo(videoId);
+        console.log("streaming response: ", response);
+        setVideoUrl(response.video);
       };
 
       fetchVideo();
     }
   }, [videoId])
+
+  const handleVideoClick = (id) => {
+    setVideoId(id);
+    setVideoName(videos.filter(video => video.id === id)[0]?.name);
+  };
 
   return (
     <div className="course-page">
@@ -63,7 +64,7 @@ function CoursePage() {
       <div className="main-content">
         <div className="video-player-container">
           <div className="video-placeholder">
-            <video key={videoUrl} controls>
+            <video key={videoUrl} controls controlsList="nodownload">
               {videoUrl && <source src={videoUrl} type="video/mp4" />}
             </video>
           </div>
@@ -90,8 +91,8 @@ function CoursePage() {
           <div className="videos-list">
             <h3>Videos</h3>
             <ul>
-              {videos.map((video, index) => (
-                <li key={index}>{video.name}</li>
+              {videos.filter(video => video.id !== videoId).map((video) => (
+                <li key={video.id} onClick={() => handleVideoClick(video.id)}>{video.name}</li>
               ))}
             </ul>
           </div>
