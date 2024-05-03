@@ -1,8 +1,9 @@
 // InstructorDashboard.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NewCoursePopup from './NewCoursePopup';
 import './InstructorDashboard.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getCoursesForUser } from './services/course';
 
 const courseData = [
   // Placeholder for course data. You would fetch this data from an API.
@@ -17,6 +18,12 @@ const courseData = [
 function InstructorDashboard() {
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate(); // Hook to navigate to different routes
+  let { userId } = useParams();
+  
+  useEffect(() => {
+    console.log("use Effect for fetching courses: " + userId)
+    getCoursesForUser(userId)
+  }, [userId])
 
   const handleCourseClick = (courseId) => {
     navigate(`/ins-course/${courseId}`); // Navigating to the course page
