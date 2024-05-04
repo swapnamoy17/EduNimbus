@@ -1,9 +1,9 @@
 // InstructorDashboard.js
 import React, { useState, useEffect } from 'react';
-import NewCoursePopup from './NewCoursePopup';
+//import NewCoursePopup from './NewCoursePopup';
 import './InstructorDashboard.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getCoursesForUser } from './services/course';
+import { getCoursesForUser, addNewCourse} from './services/course';
 
 const courseData = [
   // Placeholder for course data. You would fetch this data from an API.
@@ -23,7 +23,11 @@ function InstructorDashboard() {
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate(); // Hook to navigate to different routes
   const userId = localStorage.getItem('userId') // Get userId from URL parameters
-  
+  const [newCourseName, setNewCourseName] = useState('');
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [newSummary, setNewSummary] = useState(''); 
+  const tagsList = ['AI', 'Machine Learning', 'Data Science', 'Big Data', 'Analytics']; // Example tags
+
   useEffect(() => {
     if (userId) {
       const fetchAllCourses = async () => {
@@ -47,6 +51,31 @@ function InstructorDashboard() {
       fetchAllCourses();
     }
   }, [userId]);
+
+  const handleAddCourseSubmit = async (e) => {
+    e.preventDefault();
+    const newTags = selectedTags.join(','); // Convert selected tags to string
+    const newCourseData = { course_name: newCourseName, tags: newTags, summary: newSummary, userId };
+    try {
+      const response = await addNewCourse(newCourseData);
+      console.log('Course added:', response);
+      setCourses([...courses, { ...newCourseData, course_id: response.courseId }]);
+      setShowPopup(false);
+    } catch (error) {
+      console.error('Error adding course:', error);
+      alert('Failed to add course');
+    }
+  };
+
+  const handleTagClick = (tag) => {
+    setSelectedTags(prevSelected => {
+      if (prevSelected.includes(tag)) {
+        return prevSelected.filter(t => t !== tag); // Deselect tag
+      } else {
+        return [...prevSelected, tag]; // Select tag
+      }
+    });
+  };
 
   const handleCourseClick = (courseId) => {
     navigate(`/ins-course/${courseId}`); // Navigating to the course page
@@ -90,7 +119,38 @@ function InstructorDashboard() {
       </div>
     </div>
     
-    {showPopup && <NewCoursePopup onClose={handleClosePopup} />}
+    {showPopup && (
+        <div className="popup">
+          <form onSubmit={handleAddCourseSubmit}>
+            <h2>Add New Course</h2>
+            <label>
+              Course Name:
+              <input type="text" value={newCourseName} onChange={(e) => setNewCourseName(e.target.value)} required />
+            </label>
+            <label>
+              Tags:
+              <div className="tags-container">
+                {tagsList.map(tag => (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={`tag-button ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                    onClick={() => handleTagClick(tag)}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </label>
+            <label>
+              Summary:
+              <textarea value={newSummary} onChange={(e) => setNewSummary(e.target.value)} required></textarea>
+            </label>
+            <button type="submit">Submit</button>
+            <button type="button" onClick={handleClosePopup}>Close</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
