@@ -105,6 +105,7 @@ const LoginPage = () => {
                             updateUserGroups(groups);
                             updateIdToken(idToken)
                             localStorage.setItem('token', idToken);
+                            localStorage.setItem('userId', email);
                             console.log("User groups: ", groups);
                             Navigate('/dashboard');
                         }

@@ -1,0 +1,48 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: black; /* Consistent background color */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo-photo {
+  height: 40px; /* Example size, adjust as needed */
+  margin-right: 10px;
+}
+
+.logo {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 24px;
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  color: white;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 20px;
+}
+
+.user-id {
+  font-size: 16px;
+  margin-right: 10px;
+  color: white; /* Subtle text color */
+}
+
+.logout-button {
+  background-color: #007bff;
+  border: none;
+  padding: 8px 16px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #0056b3;
+}

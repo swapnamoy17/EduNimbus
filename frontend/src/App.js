@@ -3,6 +3,7 @@ import { BrowserRouter,Routes, Route, Navigate  } from 'react-router-dom'
 import Home from './Home';
 import Signup from './Signup';
 import Login from './LoginPage';
+import Navbar from './Navbar';
 import InstructorDashboard from './InstructorDashboard';
 import InstructorCourse from './InstructorCourse';
 import StudentDashboard from './StudentDashboard';
@@ -41,6 +42,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path='/' element={<Home />}/>
         <Route path='/signup' element={<Signup />}/>
