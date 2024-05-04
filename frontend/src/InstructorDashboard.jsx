@@ -63,13 +63,6 @@ function InstructorDashboard() {
   return (
     <div>
       <div className="instructor-dashboard">
-      <header className="dashboard-header">
-        <img src="/edu-nimbus.png" alt="Logo" className="logo" /> {/* Replace with actual logo path */}
-        <div className="user-profile">
-          <span>Sambit S</span>
-          <img src="/instructor-logo.png" alt="User Avatar" className="user-avatar" /> {/* Replace with actual avatar path */}
-        </div>
-      </header>
       
       <h1>Your Courses</h1>
       
