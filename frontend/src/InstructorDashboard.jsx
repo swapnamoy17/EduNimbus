@@ -16,14 +16,37 @@ const courseData = [
 ];
 
 function InstructorDashboard() {
+  const [courses, setCourses] = useState([]); // State for fetched courses
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [loading, setLoading] = useState(true); // State for loading indication
+  const [error, setError] = useState(null); // State for error handling
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate(); // Hook to navigate to different routes
-  let { userId } = useParams();
+  const userId = localStorage.getItem('userId') // Get userId from URL parameters
   
   useEffect(() => {
-    console.log("use Effect for fetching courses: " + userId)
-    getCoursesForUser(userId)
-  }, [userId])
+    if (userId) {
+      const fetchAllCourses = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+          let response = await getCoursesForUser(userId);
+          console.log("Courses response: ", response);
+          const coursesList = response?.courses || [];
+          setCourses(coursesList);
+          if (coursesList.length > 0) {
+            setSelectedCourse(coursesList[0]);
+          }
+        } catch (error) {
+          console.error('Error fetching courses:', error);
+          setError('Error fetching courses');
+        }
+        setLoading(false);
+      };
+
+      fetchAllCourses();
+    }
+  }, [userId]);
 
   const handleCourseClick = (courseId) => {
     navigate(`/ins-course/${courseId}`); // Navigating to the course page
@@ -50,13 +73,22 @@ function InstructorDashboard() {
       
       <h1>Your Courses</h1>
       
-      <div className="courses-grid">
-        {courseData.map((course) => (
-          <div key={course.id} className="course-card" onClick={() => handleCourseClick(course.id)}>
-            <img src={course.thumbnailUrl} alt={course.title}/>
-            <span>{course.title}</span>
-          </div>
-        ))}
+       {/* Loading and error handling */}
+       {loading && <p>Loading courses...</p>}
+        {error && <p>{error}</p>}
+
+        <div className="courses-grid">
+          {!loading && !error && courses.map((course) => (
+            <div key={course.course_id} className="course-card" onClick={() => handleCourseClick(course.course_id)}>
+              <img src="/edu-nimbus.png" alt={course.course_name}></img>
+              <div className="course-info">
+                <h2>{course.course_name}</h2>
+                <p><strong>Tags:</strong> {course.tags}</p>
+                <p><strong>Summary:</strong> {course.summary}</p>
+                <p><strong>Rating:</strong> {course.rating}/5</p>
+              </div>
+            </div>
+          ))}
         
         <div className="course-card add-new" onClick={handleAddNewClick}>
           <span>+</span>

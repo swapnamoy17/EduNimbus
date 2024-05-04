@@ -53,13 +53,35 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    flex: 1 0 21%; /* Adjusts the card width to show 4 cards per row */
+    display: flex;
+    flex-direction: column;
   }
   
-  .course-card img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 10px;
+
+  .course-info {
+    margin-top: 10px;
+    text-align: left;
+    width: 100%;
   }
+
+  .course-info h2 {
+    font-size: 1.2em;
+    margin: 10px 0;
+    color: #333;
+  }
+
+  .course-info p {
+    margin: 5px 0;
+    color: #555;
+  }
+
+  .course-card img {
+  max-width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 15px; /* Space between image and info */
+}
   
   .add-new {
     background-color: #e0e0e0;
