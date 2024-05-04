@@ -38,5 +38,7 @@ export const authenticate = (Email, Password) => {
 export const logout = () => {
     const user = userpool.getCurrentUser();
     user.signOut();
+    localStorage.setItem('token', '');
+    localStorage.setItem('userId', '');
     window.location.href = '/';
 };
