@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
+import { uploadVideo } from './services/video';
 import './NewCoursePopup.css'; // make sure to create appropriate CSS for this
 
-function NewVideoPopup({ onClose }) {
+function NewVideoPopup({ onClose, courseId}) {
     const [videoName, setVideoName] = useState('');
   // Assuming these are your available tags
   const availableTags = ['AI', 'Machine Learning', 'Data Science', 'Big Data', 'Analytics'];
   const [selectedTags, setSelectedTags] = useState([]);
   const [videoFile, setVideoFile] = useState(null);
 
-  const handleSubmit = () => {
-    // Logic to handle submission of the new course
-    console.log(videoName, selectedTags);
-    // Close the popup after submitting
-    onClose();
-  };
+  const handleSubmit = async () => {
+    if (!videoFile) {
+        alert('Please select a video file to upload.');
+        return;
+    }
+    if (!videoName) {
+        alert('Please enter a video name.');
+        return;
+    }
+
+    try {
+        const response = await uploadVideo(courseId, videoFile, videoName);
+        console.log('Upload successful:', response);
+        onClose(); // Close the popup after successful upload
+    } catch (error) {
+        console.error('Upload failed:', error);
+        alert('Upload failed, please try again.');
+    }
+};
 
   const handleFileChange = (file) => {
     // Handle the selected file here, for example, you can set it to state

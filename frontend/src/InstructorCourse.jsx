@@ -78,20 +78,6 @@ const handleClosePopupVideo = () => {
   return (
     <div>
         <div className="instructor-course">
-        <header className="instructor-header">
-            <div className='header-content'>
-            <Link to="/dashboard">
-      <img src="/edu-nimbus.png" alt="Logo" className="logo" />
-    </Link>
-        <div className='course-name'>
-            <span>How to Sleep</span>
-        </div>
-        <div className="user-profile">
-          <span>Sambit S</span>
-          <img src={SambitSAvatar} alt="User Avatar" className="user-avatar" />
-        </div>
-        </div>
-      </header>
 
       <h1>Your Videos</h1>
 
@@ -137,7 +123,7 @@ const handleClosePopupVideo = () => {
     
     </div>
     {showQuizPopup && <NewQuizPopup onClose={handleClosePopupQuiz} />}
-    {showVideoPopup && <NewVideoPopup onClose={handleClosePopupVideo} />}
+    {showVideoPopup && <NewVideoPopup onClose={handleClosePopupVideo} courseId={courseId} />}
     {showPPTPopup && <NewPPTPopup onClose={handleClosePopupPPT} />}
     </div>
   );
