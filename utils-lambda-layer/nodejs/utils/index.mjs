@@ -41,7 +41,7 @@ export const executeQuery = async (query, params = []) => {
 };
 
 export const getStreamingVideoFromUtils = async (videoId) => {
-    const res = await executeQuery('SELECT v.video_object ' +
+    const res = await executeQuery('SELECT v.video_object, v.transcript_object ' +
                                  'FROM services.video v ' +
                                  'WHERE v.video_id = $1 ', [videoId]);
     return res;

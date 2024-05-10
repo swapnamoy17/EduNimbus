@@ -2,12 +2,36 @@ import React, { useEffect, useState } from 'react';
 import './CoursePage.css';
 import { getVideosForCourse, streamVideo } from './services/video';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 function CoursePage() {
 
   let { courseId } = useParams();
 
+  function formatSubtitles(subtitles) {
+    const formattedSubtitles = subtitles.replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2');
+    return formattedSubtitles;
+  }
+
+  async function createDataUri(preSignedUrl='') {
+    try {
+      const response = await axios.get(preSignedUrl);
+      const transcript = response.data;
+  
+      const header = "WEBVTT\n\n";
+      let formattedText = header + transcript.replace(/\n/g, '\n');
+      formattedText = formatSubtitles(formattedText);
+      console.log("cgvhgdcvsbdcjdcsx", formattedText);
+      const encodedSubtitles = encodeURIComponent(formattedText);
+      return `data:text/vtt;charset=utf-8,${encodedSubtitles}`;
+    } catch (error) {
+      console.error('Failed to fetch or process transcript:', error);
+      return null;
+    }
+  }
+
   const [videoUrl, setVideoUrl] = useState('');
+  const [subtitle, setSubtitle] = useState('');
   const [videoId, setVideoId] = useState('');
   const [videoName, setVideoName] = useState('');
   const [videos, setVideos] = useState([]);
@@ -40,7 +64,9 @@ function CoursePage() {
       const fetchVideo = async () => {
         let response = await streamVideo(videoId);
         console.log("streaming response: ", response);
+        let transcript = await createDataUri(response.transcript);
         setVideoUrl(response.video);
+        setSubtitle(transcript);
       };
 
       fetchVideo();
@@ -66,6 +92,15 @@ function CoursePage() {
           <div className="video-placeholder">
             <video key={videoUrl} controls controlsList="nodownload">
               {videoUrl && <source src={videoUrl} type="video/mp4" />}
+              {(
+                <track 
+                  src={subtitle}
+                  kind="subtitles"
+                  srcLang="en"
+                  label="English"
+                  default
+                />
+              )}
             </video>
           </div>
           <h2>{videoName}</h2>
