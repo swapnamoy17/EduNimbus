@@ -1,31 +1,31 @@
 import axios from 'axios';
 
-// const videoApiClient = axios.create({
-//   baseURL: process.env.REACT_APP_VIDEO_GATEWAY_ENDPOINT,
-//   headers: {
-//     'Content-Type': 'application/json'
-//   }
-// });
-
-// videoApiClient.interceptors.request.use((config) => {
-//     const token = localStorage.getItem('token');
-//     console.log("videoAPIClient - token: ", token);
-//     if (token) {
-//       config.headers['Authorization'] = `Bearer ${token}`;
-//     }
-//     return config;
-// }, (error) => {
-//     return Promise.reject(error);
-// });
-
 const videoApiClient = axios.create({
-  // baseURL: process.env.REACT_APP_VIDEO_GATEWAY_ENDPOINT
-  baseURL: "https://ylek25jm8d.execute-api.us-east-1.amazonaws.com/dev_test"
+  baseURL: process.env.REACT_APP_VIDEO_GATEWAY_ENDPOINT,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
 videoApiClient.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     console.log("videoAPIClient - token: ", token);
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
+const videoAPiClientUplaod = axios.create({
+  // baseURL: process.env.REACT_APP_VIDEO_GATEWAY_ENDPOINT
+  baseURL: process.env.REACT_APP_VIDEO_UPLOAD_GATEWAY_ENDPOINT
+});
+
+videoAPiClientUplaod.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    console.log("videoAPIClientUpload - token: ", token);
     
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
