@@ -7,17 +7,21 @@ import NewPPTPopup from './newPPTPopup';
 import NewVideoPopup from './newVideoPopup';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { getVideosForCourse } from './services/video';
 // import SampleVideo from './sample-video.mp4';
 // import SampleBand from './sample-band.jpg';
 
 function InstructorCourse() {
-    const { courseId } = useParams();
+  const { courseId } = useParams();
   const [quizData, setQuizData] = useState([]);
   const [videoData, setVideoData] = useState([]);
   const [pptData, setPPTData] = useState([]);
   const [showQuizPopup, setShowQuizPopup] = useState(false);
   const [showPPTPopup, setShowPPTPopup] = useState(false);
+  const userId = localStorage.getItem('userId')
   const [showVideoPopup, setShowVideoPopup] = useState(false);
+  const [videos, setVideos] = useState([]);
+  const [newVideoAdded, setNewVideoAdded] = useState(false);
 
   const handleAddNewClickQuiz = () => {
         setShowQuizPopup(true);
@@ -28,6 +32,7 @@ function InstructorCourse() {
 };
 
 const handleAddNewClickVideo = () => {
+    setNewVideoAdded(false);
     setShowVideoPopup(true);
 };
 
@@ -40,7 +45,12 @@ const handleAddNewClickVideo = () => {
 };
 
 const handleClosePopupVideo = () => {
+  
+  setTimeout(() => {
     setShowVideoPopup(false);
+    setNewVideoAdded(true);
+   }, 10000)
+    
 };
 
 
@@ -65,15 +75,43 @@ const handleClosePopupVideo = () => {
     }
   ]
 
+  // useEffect(() => {
+  //     if (newVideoAdded) {
+  //       setVideos()
+  //     }
+  // }, [newVideoAdded, newVideoAdded])
+
 
   useEffect(() => {
     // Simulating an API call to fetch quiz data
-    setTimeout(() => {
-      setQuizData(dummyQuizData);
-      setVideoData(dummyVideoData);
-      setPPTData(dummyPPTData);
-    }, 1000); // 1 second delay for demonstration
-  }, []);
+    const fetchVideos = async () => {
+      try {
+        // Call the getVideosForCourse function
+        console.log("Hello")
+        const response = await getVideosForCourse(courseId);
+        console.log("hello again")
+        console.log(response)
+        setVideos(response.videos || []);
+        console.log(videos) // Assuming response.data contains the list of videos
+      } catch (error) {
+        console.error('Error fetching videos:', error);
+      }
+    };
+
+    
+      if (userId || newVideoAdded) {
+        fetchVideos();
+     }
+    
+      setTimeout(() => {
+        setQuizData(dummyQuizData);
+        setVideoData(dummyVideoData);
+        setPPTData(dummyPPTData);
+       }, 1000); 
+   
+
+    console.log(videos)
+  }, [userId, newVideoAdded]);
 
   return (
     <div>
@@ -82,12 +120,18 @@ const handleClosePopupVideo = () => {
       <h1>Your Videos</h1>
 
       <div className="video-grid">
-        {videoData.map((video) => (
+        {/* {videoData.map((video) => (
           <div key={video.id} className="card">
             <img src={video.thumbnailUrl} alt={video.title} />
             <span>{video.title}</span>
           </div>
-        ))}
+        ))} */}
+        {videos.map((video) => (
+        <div key={video.id} className="card">
+          <img src={'/edu-nimbus.png'} alt={video.name} />
+          <span>{video.name}</span>
+        </div>
+      ))}
         
         <div className="card add-new" onClick={handleAddNewClickVideo}>
           <span>+</span>
