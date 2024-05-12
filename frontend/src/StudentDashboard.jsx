@@ -62,7 +62,7 @@ function StudentDashboard({ onLogout, user }) {
   // Render a single course card
   const renderCourse = (course, type) => (
     <Link to={type === 'enrolled' ? `/course/${course.course_id}` : `/summary/${course.course_id}`} className="course-card" key={course.course_id}>
-            <img src={course.thumbnail} alt={course.title} />
+            <img src='/no_content.png' alt={course.course_name} ></img>
             <div className="course-info">
                 <h3>{course.course_name}</h3>
                 <p>{course.summary}</p>
