@@ -64,7 +64,7 @@
   }
   
   .course-card img {
-    width: 150px; /* Adjust size as needed */
+    width: 100%; /* Adjust size as needed */
     height: 150px; /* Adjust size as needed */
     object-fit: cover; /* Ensures the image covers the set dimensions */
   }
