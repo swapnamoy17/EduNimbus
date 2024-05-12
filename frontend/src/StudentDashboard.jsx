@@ -85,7 +85,6 @@ function StudentDashboard({ onLogout, user }) {
       {recommendedCourses.map(course => renderCourse(course, 'recommended'))}
       </div>
       </section>
-      <button onClick={onLogout}>Logout</button>
     </div>
   );
 }
