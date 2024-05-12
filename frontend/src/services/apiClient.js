@@ -19,7 +19,6 @@ videoApiClient.interceptors.request.use((config) => {
 });
 
 const videoAPiClientUplaod = axios.create({
-  // baseURL: process.env.REACT_APP_VIDEO_GATEWAY_ENDPOINT
   baseURL: process.env.REACT_APP_VIDEO_UPLOAD_GATEWAY_ENDPOINT
 });
 
@@ -58,3 +57,4 @@ courseApiClient.interceptors.request.use((config) => {
 });
 export { videoApiClient }
 export { courseApiClient }
+export { videoAPiClientUplaod }
