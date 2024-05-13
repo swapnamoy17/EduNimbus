@@ -141,7 +141,7 @@ function CoursePage() {
     };
 
     const handleQuizButtonClick = (quiz) => {
-      navigate(`/course/${courseId}/${quiz.quiz_id}`);
+      navigate(`/course/${courseId}/quiz/${quiz.quiz_id}`);
     };
 
     return (
