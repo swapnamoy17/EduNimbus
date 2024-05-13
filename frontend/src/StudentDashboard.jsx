@@ -20,19 +20,19 @@ const enrolledCourses = [
   
 ];
 
-const recommendedCourses = [
-  {course_id: 17,
-    title: 'Deep Learning',
-    summary: 'In depth course on Deep Learning',
-    tags: ['AI', 'Machine Learning']
-  },
-  {course_id: 9,
-    title: 'Java',
-    summary: 'In depth course on Java',
-    tags: ['Java', 'Software Engineering']
-  }
-  // ... other courses
-];
+// const recommendedCourses = [
+//   {course_id: 17,
+//     title: 'Deep Learning',
+//     summary: 'In depth course on Deep Learning',
+//     tags: ['AI', 'Machine Learning']
+//   },
+//   {course_id: 9,
+//     title: 'Java',
+//     summary: 'In depth course on Java',
+//     tags: ['Java', 'Software Engineering']
+//   }
+//   // ... other courses
+// ];
 
 function StudentDashboard({ onLogout, user }) {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -103,12 +103,12 @@ function StudentDashboard({ onLogout, user }) {
       {enrolledCourses.map(course => renderCourse(course, 'enrolled'))}
       </div>
       </section>
-      <section className="course-section">
+      {/* <section className="course-section">
       <h2>Recommended Courses</h2>
       <div className="course-container">
       {recommendedCourses.map(course => renderCourse(course, 'recommended'))}
       </div>
-      </section>
+      </section> */}
     </div>
   );
 }
