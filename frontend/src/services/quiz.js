@@ -1,6 +1,8 @@
 import makeApiCall from './apiService';
 import { quizApiClient } from './apiClient';
 import { quizAPiClientUplaod } from './apiClient';
+import { quizInstApiClient } from './apiClient';
+import { quizSingleApiClient } from './apiClient';
 
 const getQuizesForVideo = async (videoId) => {
     return makeApiCall({
@@ -20,6 +22,24 @@ const getQuizesForVideo = async (videoId) => {
         video_ids: selectedVideos.map(id => ({ id }))
         },
     }, quizApiClient);
+  };
+
+const getQuizesForCourse = async (courseId) => {
+    return makeApiCall({
+      method: 'get',
+      url: '',
+      params: { courseId: courseId },
+      body: ''
+    }, quizInstApiClient);
+  };
+
+const getSingleQuize = async (quizId) => {
+    return makeApiCall({
+      method: 'get',
+      url: '',
+      params: { quizId: quizId },
+      body: ''
+    }, quizSingleApiClient);
   };
 
 // const uploadQuiz = async (quizName, selectedVideos) => {
@@ -67,4 +87,4 @@ const getQuizesForVideo = async (videoId) => {
 //   };
 
 
-export { getQuizesForVideo, addNewQuiz };
+export { getQuizesForVideo, addNewQuiz, getQuizesForCourse, getSingleQuize };

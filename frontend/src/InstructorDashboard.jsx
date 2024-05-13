@@ -52,6 +52,19 @@ function InstructorDashboard() {
     }
   }, [userId]);
 
+  useEffect(() => {
+    const handleBackButton = () => {
+      navigate('/login', { replace: true });
+    };
+
+    window.addEventListener('popstate', handleBackButton);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('popstate', handleBackButton);
+    };
+  }, [navigate]);
+
   const handleAddCourseSubmit = async (e) => {
     e.preventDefault();
     const newTags = selectedTags.join(','); // Convert selected tags to string

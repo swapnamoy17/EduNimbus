@@ -97,6 +97,42 @@ quizAPiClientUplaod.interceptors.request.use((config) => {
     return Promise.reject(error);
 });
 
+const quizInstApiClient = axios.create({
+  baseURL: process.env.REACT_APP_QUIZ_GATEWAY_ENDPOINT_INST_GET,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+quizInstApiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  console.log("videoAPIClient - token: ", token);
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+const quizSingleApiClient = axios.create({
+  baseURL: `${process.env.REACT_APP_QUIZ_GATEWAY_ENDPOINT_GET}/quiz` ,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+quizSingleApiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  console.log("videoAPIClient - token: ", token);
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
 
 
 export { videoApiClient }
@@ -104,3 +140,5 @@ export { courseApiClient }
 export { videoAPiClientUplaod }
 export { quizApiClient }
 export { quizAPiClientUplaod }
+export { quizInstApiClient }
+export { quizSingleApiClient }

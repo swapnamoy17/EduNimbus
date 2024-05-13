@@ -3,6 +3,7 @@ import './CoursePage.css';
 import { useParams, useLocation, useNavigate } from 'react-router-dom'; // useNavigate instead of useHistory
 import { getVideosForCourse, streamVideo } from './services/video';
 import { useCourses } from './CourseContext';  // Assuming you have created this Context
+import { getQuizesForVideo } from './services/quiz';
 import axios from 'axios';
 
 function CoursePage() {
@@ -36,7 +37,52 @@ function CoursePage() {
             console.error('Failed to fetch or process transcript:', error);
             return null;
         }
+      }
+  
+  const userId = localStorage.getItem('userId')
+  const [quizes, setQuizes] = useState([]);
+
+  const quizzes = ["Quiz 1", "Quiz 2"];
+  const ppts = ["PPT 1", "PPT 2"];
+
+  useEffect(() => {
+    if (courseId) {
+      console.log("use Effect for fetching videos for course: " + courseId)
+
+      const fetchAllVideos = async () => {
+        let response = await getVideosForCourse(courseId);
+        console.log("/ - get response: ", response);
+        const videos = response?.videos;
+        const firstVideoId = videos[0]?.id;
+        const videoName = videos.filter(video => video.id === firstVideoId)[0]?.name;
+        setVideoId(firstVideoId);
+        setVideoName(videoName);
+        setVideos(videos);
+      }
+
+      fetchAllVideos();
     }
+  }, [courseId])
+
+  useEffect(() => {
+    if (videoId) {
+      console.log("use Effect for fetching stream video: " + videoId + "for course: " + courseId)
+      const fetchVideo = async () => {
+        let response = await streamVideo(videoId);
+        console.log("streaming response: ", response);
+        let transcript = await createDataUri(response.transcript);
+        setVideoUrl(response.video);
+        setSubtitle(transcript);
+
+        //for quizes
+        let quizresponse = await getQuizesForVideo(videoId);
+        console.log("Hello from quizes", quizresponse)
+        if (quizresponse.quizes.length > 0) {
+          console.log("Hello from quizes mi nino ", quizresponse.quizes[0].quiz_ref);
+        }
+    }
+  }
+});
 
     useEffect(() => {
         const fetchAllVideos = async () => {
@@ -76,15 +122,12 @@ function CoursePage() {
         }
     };
 
+    const handleQuizButtonClick = (quiz) => {
+      navigate(`/course/${courseId}/${quiz.quiz_id}`);
+    };
+
     return (
         <div className="course-page">
-            <header className="course-header">
-                <h1>Cloud Computing</h1>
-                <div className="user-info">
-                    <span>Sambit S</span>
-                    <img src="path/to/user/avatar" alt="User" />
-                </div>
-            </header>
             <div className="main-content">
                 <div className="video-player-container">
                     <div className="video-placeholder">
@@ -108,8 +151,15 @@ function CoursePage() {
                                 <h3 className="section-title">Quizzes</h3>
                                 {/* Example quiz list */}
                                 <div className="quizzes-list">
-                                    <a href="#" className="quiz-item">Quiz 1</a>
-                                    <a href="#" className="quiz-item">Quiz 2</a>
+                                {quizes.map((quize, index) => (
+              <button 
+                key={`quiz-${index}`} 
+                className="quiz-item" 
+                onClick={() => handleQuizButtonClick(quize)}
+              >
+              {quize.quiz_name}
+              </button>
+              ))}
                                 </div>
                             </div>
                             <div className="ppts-section">
@@ -134,8 +184,11 @@ function CoursePage() {
                         </ul>
                     </div>
                 </aside>
-            </div>
-        </div>
+                </div>
+                </div>
+  
+          
+          
     );
 }
 
