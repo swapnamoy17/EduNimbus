@@ -15,6 +15,7 @@ import { useUserState } from './redux/useUserState';
 
 import './App.css';
 import userpool from './userpool';
+import QuizPage from './QuizPage';
 
 function App() {
   const INSTRUCTOR_GROUP = "Instructors"
@@ -24,6 +25,14 @@ function App() {
 
   useEffect(()=>{
     let user=userpool.getCurrentUser();
+    const storedData = localStorage.getItem('token');
+
+    // Parse the data if it's in JSON format
+    if (storedData) {
+      const parsedData = storedData;
+      console.log("Hello from parsed ", parsedData);
+      //setUserData(parsedData);
+    }
       if(user){
         <Navigate to="/dashboard" replace />
       }
@@ -51,6 +60,7 @@ function App() {
         <Route path="/ins-course/:courseId" element={<InstructorCourse />} />
         <Route path="/course/:courseId" element={<CoursePage />} />
         <Route path="/summary/:id" element={<CourseSummaryPage />} />
+        <Route path="/course/:courseId/:quizId" element={<QuizPage />} />
       </Routes>
     </BrowserRouter>
   );

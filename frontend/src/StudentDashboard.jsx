@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './StudentDashboard.css'; // Make sure to create a corresponding CSS file
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getCoursesForUser } from './services/course';
 // Mock data for courses
 const enrolledCourses = [
@@ -35,6 +35,7 @@ function StudentDashboard({ onLogout, user }) {
   const [error, setError] = useState('');
   const userId = localStorage.getItem('userId')
   console.log(userId)
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
       if (!userId) {
@@ -58,6 +59,19 @@ function StudentDashboard({ onLogout, user }) {
 
     fetchEnrolledCourses();
   }, [userId]);
+
+  useEffect(() => {
+    const handleBackButton = () => {
+      navigate('/login', { replace: true });
+    };
+
+    window.addEventListener('popstate', handleBackButton);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('popstate', handleBackButton);
+    };
+  }, [navigate]);
 
   // Render a single course card
   const renderCourse = (course, type) => (

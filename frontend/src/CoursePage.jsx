@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './CoursePage.css';
 import { getVideosForCourse, streamVideo } from './services/video';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getQuizesForVideo } from './services/quiz';
 import axios from 'axios';
 
@@ -38,6 +38,7 @@ function CoursePage() {
   const [videos, setVideos] = useState([]);
   const userId = localStorage.getItem('userId')
   const [quizes, setQuizes] = useState([]);
+  const navigate = useNavigate();
 
   const quizzes = ["Quiz 1", "Quiz 2"];
   const ppts = ["PPT 1", "PPT 2"];
@@ -73,7 +74,7 @@ function CoursePage() {
 
         //for quizes
         let quizresponse = await getQuizesForVideo(videoId);
-        console.log(quizresponse.quizes)
+        console.log("Hello from quizes", quizresponse)
         if (quizresponse.quizes.length > 0) {
           console.log("Hello from quizes mi nino ", quizresponse.quizes[0].quiz_ref);
         }
@@ -88,6 +89,10 @@ function CoursePage() {
     setVideoId(id);
     setVideoName(videos.filter(video => video.id === id)[0]?.name);
   };
+
+  const handleQuizButtonClick = (quiz) => {
+    navigate(`/course/${courseId}/${quiz.quiz_id}`);
+  }
 
   return (
     <div className="course-page">
@@ -120,8 +125,17 @@ function CoursePage() {
             <h3 className="section-title">Quizzes</h3>
             <div className="quizzes-list">
 
+              {/* {quizes.map((quize, index) => (
+                <a key={`quiz-${index}`} href="#" className="quiz-item">{quize.quiz_name}</a>
+              ))} */}
               {quizes.map((quize, index) => (
-                <a key={`quiz-${index}`} href="#" className="quiz-item">Quiz {index + 1}</a>
+              <button 
+                key={`quiz-${index}`} 
+                className="quiz-item" 
+                onClick={() => handleQuizButtonClick(quize)}
+              >
+              {quize.quiz_name}
+              </button>
               ))}
             </div>
           </div>

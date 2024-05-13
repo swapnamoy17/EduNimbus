@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { getVideosForCourse } from './services/video';
 import { getQuizesForVideo } from './services/quiz';
+import { getQuizesForCourse } from './services/quiz';
 // import SampleVideo from './sample-video.mp4';
 // import SampleBand from './sample-band.jpg';
 
@@ -24,8 +25,10 @@ function InstructorCourse() {
   const [videos, setVideos] = useState([]);
   const [newVideoAdded, setNewVideoAdded] = useState(false);
   const [quizes, setQuizes] = useState([]);
+  const [newQuizAdded, setNewQuizAdded] = useState(false);
 
   const handleAddNewClickQuiz = () => {
+        setNewQuizAdded(false)
         setShowQuizPopup(true);
   };
 
@@ -39,6 +42,7 @@ const handleAddNewClickVideo = () => {
 };
 
   const handleClosePopupQuiz = () => {
+        setNewQuizAdded(true);
         setShowQuizPopup(false);
   };
  
@@ -96,28 +100,10 @@ const handleClosePopupVideo = () => {
         setVideos(response.videos || []);
         console.log(videos) // Assuming response.data contains the list of videos
 
-        //await fetchQuizes(videos)
       } catch (error) {
         console.error('Error fetching videos:', error);
       }
     };
-
-    // const fetchQuizes = async (videos) => {
-    //   console.log("Hello from the other side")
-    //   let quizresponse = [];
-
-      
-    //   let quizresponse = await getQuizesForVideo(videoId);
-    //   console.log(quizresponse.quizes)
-    //   if (quizresponse.quizes.length > 0) {
-    //       console.log("Hello from quizes mi nino ", quizresponse.quizes[0].quiz_ref);
-    //       for (let i = 0; i < quizresponse.quizes.length; i++)
-    //       {
-
-    //       }
-    //   }
-    //   setQuizes(quizresponse.quizes || [])
-    // }
 
     
       if (userId || newVideoAdded) {
@@ -133,6 +119,24 @@ const handleClosePopupVideo = () => {
 
     console.log(videos)
   }, [userId, newVideoAdded]);
+
+  useEffect(() => {
+    const fetchQuizes = async (courseId) => {
+      console.log("Hello from the other side")
+
+      
+      let quizresponse = await getQuizesForCourse(courseId);
+      console.log(quizresponse.quizes)
+      if (quizresponse.quizes.length > 0) {
+        console.log("Hello from quizes mi nino ", quizresponse.quizes[0].quiz_ref);
+      }
+      setQuizes(quizresponse.quizes || [])
+    }
+
+    if (userId || newQuizAdded) {
+      fetchQuizes(courseId)
+    }
+  }, [userId, newQuizAdded]);
 
   return (
     <div>
@@ -162,9 +166,9 @@ const handleClosePopupVideo = () => {
     
       <h1>Your Quizes</h1>
       <div className="quiz-grid">
-        {quizData.map((quiz) => (
-            <div key={quiz.id} className="card">
-            <span>{quiz.title}</span>
+        {quizes.map((quiz) => (
+            <div key={quiz.quiz_ref} className="card">
+            <span>{quiz.quiz_name}</span>
           </div>
         ))}
         <div className="card add-new" onClick={handleAddNewClickQuiz}>
