@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getSingleQuize } from './services/quiz';
 import axios from 'axios';
+import './QuizPage.css';
 
 function QuizPage() {
     let { courseId, quizId } = useParams();
@@ -9,6 +10,7 @@ function QuizPage() {
   const [score, setScore] = useState(null);
   const userId = localStorage.getItem('userId');
   const [quiz, setQuiz] = useState([]);
+  const [quizName, setQuizName] = useState('');
   let params = useParams();
   console.log('Hello from params', params);
   console.log('courseId ', courseId, 'quizId ', quizId);
@@ -43,6 +45,7 @@ function QuizPage() {
         if (quizresponse > 0) {
           console.log("Hello from quizes mi nino ", quizresponse);
         }
+        setQuizName(quizresponse.name)
         setQuiz(quizjson.questions || [])
       }
   
@@ -52,14 +55,14 @@ function QuizPage() {
   }, [quizId])
 
   return (
-    <div>
-      <h1>Quiz</h1>
+    <div className="quiz-container">
+      <h1>{quizName}</h1>
       {quiz.map((question, index) => (
-        <div key={index}>
+        <div key={index} className="question">
           <h2>{question.question}</h2>
-          <ul>
+          <ul className="options">
             {question.options.map((option, optionIndex) => (
-              <li key={optionIndex}>
+              <li key={optionIndex} className="option">
                 <label>
                   <input
                     type="radio"

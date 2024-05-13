@@ -16,6 +16,7 @@ import WebSocketContext from './WebSocketContext';
 import './App.css';
 import userpool from './userpool';
 import QuizPage from './QuizPage';
+import PPTPage from './PPTPage';
 
 function App() {
   const INSTRUCTOR_GROUP = "Instructors"
@@ -66,7 +67,10 @@ function App() {
         <Route path="/ins-course/:courseId" element={<InstructorCourse />} />
         <Route path="/course/:courseId" element={<CoursePage />} />
         <Route path="/summary/:id" element={<CourseSummaryPage />} />
-        <Route path="/course/:courseId/:quizId" element={<QuizPage />} />
+        <Route path="/course/:courseId/quiz/:quizId" element={<QuizPage />} />
+        <Route path="/ins-course/:courseId/quiz/:quizId" element={<QuizPage />} />
+        <Route path="/course/:courseId/ppt/:pptId" element={<PPTPage />} />
+        <Route path="/ins-course/:courseId/ppt/:pptId" element={<PPTPage />} />
       </Routes>
     </BrowserRouter>
   );

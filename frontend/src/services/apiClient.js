@@ -133,6 +133,60 @@ quizSingleApiClient.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+const PPTApiClient = axios.create({
+  baseURL: process.env.REACT_APP_PPT_GATEWAT_ENDPOINT_GET,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+PPTApiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  console.log("videoAPIClient - token: ", token);
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+const PPTInstApiClient = axios.create({
+  baseURL: process.env.REACT_APP_PPT_GATEWAY_ENDPOINT_INST_GET,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+PPTInstApiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  console.log("videoAPIClient - token: ", token);
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+const PPTSingleApiClient = axios.create({
+  baseURL: `${process.env.REACT_APP_PPT_GATEWAT_ENDPOINT_GET}/quiz` ,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+PPTSingleApiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  console.log("videoAPIClient - token: ", token);
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
 
 
 export { videoApiClient }
@@ -142,3 +196,6 @@ export { quizApiClient }
 export { quizAPiClientUplaod }
 export { quizInstApiClient }
 export { quizSingleApiClient }
+export { PPTApiClient }
+export { PPTInstApiClient }
+export { PPTSingleApiClient }

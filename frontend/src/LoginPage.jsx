@@ -26,7 +26,7 @@ const LoginPage = () => {
   const [newPasswordErr, setNewPasswordErr] = useState('');
   const [cognitoUser, setCognitoUser] = useState(null);
   const { updateUser, updateUserGroups, updateIdToken } = useUserActions();
-  const { setUserId } = useContext(WebSocketContext);
+  // const { setUserId } = useContext(WebSocketContext);
 
   const formInputChange = (formField, value) => {
     if (formField === EMAIL) {
@@ -108,7 +108,7 @@ const LoginPage = () => {
                             localStorage.setItem('token', idToken);
                             localStorage.setItem('userId', email);
                             console.log("User groups: ", groups);
-                            setUserId(email);
+                            // setUserId(email);
                             Navigate('/dashboard');
                         }
                     })

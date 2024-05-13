@@ -3,6 +3,7 @@ import './CoursePage.css';
 import { getVideosForCourse, streamVideo } from './services/video';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getQuizesForVideo } from './services/quiz';
+import { getPPTsForVideo } from './services/ppt';
 import axios from 'axios';
 
 function CoursePage() {
@@ -39,9 +40,10 @@ function CoursePage() {
   const userId = localStorage.getItem('userId')
   const [quizes, setQuizes] = useState([]);
   const navigate = useNavigate();
+  const [ppts, setPpts] = useState([]);
 
   const quizzes = ["Quiz 1", "Quiz 2"];
-  const ppts = ["PPT 1", "PPT 2"];
+  //const ppts = ["PPT 1", "PPT 2"];
 
   useEffect(() => {
     if (courseId) {
@@ -79,6 +81,13 @@ function CoursePage() {
           console.log("Hello from quizes mi nino ", quizresponse.quizes[0].quiz_ref);
         }
         setQuizes(quizresponse.quizes || [])
+
+        let pptresponse = await getPPTsForVideo(videoId);
+        console.log("Hello from quizes", pptresponse)
+        if (pptresponse.ppts.length > 0) {
+          console.log("Hello from quizes mi nino ppt ", pptresponse.ppts[0].ppt_ref);
+        }
+        setPpts(pptresponse.ppts || [])
       };
 
       fetchVideo();
@@ -91,7 +100,11 @@ function CoursePage() {
   };
 
   const handleQuizButtonClick = (quiz) => {
-    navigate(`/course/${courseId}/${quiz.quiz_id}`);
+    navigate(`/course/${courseId}/quiz/${quiz.quiz_id}`);
+  }
+
+  const handlePPTButtonClick = (ppt) => {
+    navigate(`/course/${courseId}/ppt/${ppt.ppt_id}`);
   }
 
   return (
@@ -142,8 +155,14 @@ function CoursePage() {
           <div className="ppts-section">
             <h3 className="section-title">Presentations</h3>
             <div className="ppts-list">
-              {ppts.map((ppt, index) => (
-                <a key={`ppt-${index}`} href="#" className="ppt-item">{ppt} Download</a>
+            {ppts.map((ppt, index) => (
+              <button 
+                key={`ppt-${index}`} 
+                className="quiz-item" 
+                onClick={() => handlePPTButtonClick(ppt)}
+              >
+              {ppt.ppt_name}
+              </button>
               ))}
             </div>
           </div>

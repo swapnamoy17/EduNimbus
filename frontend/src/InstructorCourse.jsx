@@ -7,10 +7,11 @@ import NewQuizPopup from './newQuizPopup';
 import NewPPTPopup from './newPPTPopup';
 import NewVideoPopup from './newVideoPopup';
 import { Link } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getVideosForCourse } from './services/video';
 import { getQuizesForVideo } from './services/quiz';
 import { getQuizesForCourse } from './services/quiz';
+import { getPPTsForCourse } from './services/ppt';
 // import SampleVideo from './sample-video.mp4';
 // import SampleBand from './sample-band.jpg';
 
@@ -27,6 +28,9 @@ function InstructorCourse() {
   const [newVideoAdded, setNewVideoAdded] = useState(false);
   const [quizes, setQuizes] = useState([]);
   const [newQuizAdded, setNewQuizAdded] = useState(false);
+  const [newPPTAdded, setNewPPTAdded] = useState(false);
+  const [ppts, setPppts] = useState([]);
+  const navigate = useNavigate();
 
   const handleAddNewClickQuiz = () => {
         setNewQuizAdded(false)
@@ -34,6 +38,7 @@ function InstructorCourse() {
   };
 
   const handleAddNewClickPPT = () => {
+    setNewPPTAdded(true)
     setShowPPTPopup(true);
 };
 
@@ -48,6 +53,7 @@ const handleAddNewClickVideo = () => {
   };
  
   const handleClosePopupPPT = () => {
+    setNewPPTAdded(false);
     setShowPPTPopup(false);
 };
 
@@ -144,6 +150,32 @@ const handleClosePopupVideo = () => {
     }
   }, [userId, newQuizAdded]);
 
+  useEffect(() => {
+    const fetchPpts = async (courseId) => {
+      console.log("Hello from the other side")
+
+      
+      let pptresponse = await getPPTsForCourse(courseId);
+      console.log(pptresponse.ppts)
+      if (pptresponse.ppts.length > 0) {
+        console.log("Hello from quizes mi nino ", pptresponse.ppts[0].ppt_ref);
+      }
+      setPppts(pptresponse.ppts || [])
+    }
+
+    if (userId || newQuizAdded) {
+      fetchPpts(courseId)
+    }
+  }, [userId, newPPTAdded]);
+
+  const handleQuizButtonClick = (quiz) => {
+    navigate(`/ins-course/${courseId}/quiz/${quiz.quiz_id}`);
+  }
+
+  const handlePPTButtonClick = (ppt) => {
+    navigate(`/ins-course/${courseId}/ppt/${ppt.ppt_id}`);
+  }
+
   return (
     <div>
         <div className="instructor-course">
@@ -173,7 +205,7 @@ const handleClosePopupVideo = () => {
       <h1>Your Quizes</h1>
       <div className="quiz-grid">
         {quizes.map((quiz) => (
-            <div key={quiz.quiz_ref} className="card">
+            <div key={quiz.quiz_ref} className="card" onClick={() => handleQuizButtonClick(quiz)}>
             <span>{quiz.quiz_name}</span>
           </div>
         ))}
@@ -185,9 +217,9 @@ const handleClosePopupVideo = () => {
 
       <h1>Your PPTs</h1>
       <div className="ppt-grid">
-        {pptData.map((ppt) => (
-            <div key={ppt.id} className="card">
-            <span>{ppt.title}</span>
+      {ppts.map((ppt) => (
+            <div key={ppt.ppt_ref} className="card" onClick={() => handlePPTButtonClick(ppt)}>
+            <span>{ppt.ppt_name}</span>
           </div>
         ))}
         <div className="card add-new" onClick={handleAddNewClickPPT}>
@@ -199,7 +231,7 @@ const handleClosePopupVideo = () => {
     </div>
     {showQuizPopup && <NewQuizPopup onClose={handleClosePopupQuiz} videos={videos} />}
     {showVideoPopup && <NewVideoPopup onClose={handleClosePopupVideo} courseId={courseId} onVideoUploadStart={handleVideoUploadStart} />}
-    {showPPTPopup && <NewPPTPopup onClose={handleClosePopupPPT} />}
+    {showPPTPopup && <NewPPTPopup onClose={handleClosePopupPPT} videos={videos}/>}
     </div>
   );
 }

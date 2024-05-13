@@ -91,6 +91,7 @@
     margin-bottom: 10px; /* Space between lines when they wrap */
     cursor: pointer;
     transition: background-color 0.3s ease;
+    color: black;
   }
   
   .quiz-item:hover, .ppt-item:hover {
