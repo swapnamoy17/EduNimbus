@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { authenticate } from './authenticate';
 import './LoginPage.css';
 import { useUserActions } from './redux/useUserActions';
+import WebSocketContext from './WebSocketContext';
 
 const LoginPage = () => {
 
@@ -16,7 +17,6 @@ const LoginPage = () => {
   const ROLE_NOT_ASSIGNED = "Role not assigned"
 
   const Navigate = useNavigate();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailErr, setEmailErr] = useState('');
@@ -26,6 +26,7 @@ const LoginPage = () => {
   const [newPasswordErr, setNewPasswordErr] = useState('');
   const [cognitoUser, setCognitoUser] = useState(null);
   const { updateUser, updateUserGroups, updateIdToken } = useUserActions();
+  const { setUserId } = useContext(WebSocketContext);
 
   const formInputChange = (formField, value) => {
     if (formField === EMAIL) {
@@ -107,6 +108,7 @@ const LoginPage = () => {
                             localStorage.setItem('token', idToken);
                             localStorage.setItem('userId', email);
                             console.log("User groups: ", groups);
+                            setUserId(email);
                             Navigate('/dashboard');
                         }
                     })

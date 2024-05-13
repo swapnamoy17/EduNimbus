@@ -12,7 +12,7 @@ const getVideosForCourse = async (courseId) => {
   }, videoApiClient);
 };
 
-const uploadVideo = async (courseId, file, videoName) => {
+const uploadVideo = async (userId, courseId, file, videoName) => {
   const timestamp = new Date().getTime();
   const objectName = `${courseId}_video_${timestamp}`;
 
@@ -22,7 +22,7 @@ const uploadVideo = async (courseId, file, videoName) => {
       method: 'post',
       url: '',
       data: {},
-      params: {video_name: videoName, object_name: objectName},
+      params: {video_name: videoName, object_name: objectName, course_id: courseId, user_id: userId},
       headers: {}
     }, videoAPiClientUplaod);
 
@@ -32,6 +32,7 @@ const uploadVideo = async (courseId, file, videoName) => {
 
     const preSignedUrl = presignedUrlResponse.upload_url;
     console.log(preSignedUrl);
+    const videoId = presignedUrlResponse.video_id;
 
     // Perform the upload using the fetched pre-signed URL
     const uploadResponse = await axios.put(preSignedUrl, file, {
@@ -45,7 +46,7 @@ const uploadVideo = async (courseId, file, videoName) => {
     }
 
     console.log('Upload successful:', uploadResponse.data);
-    return uploadResponse.data; // Or return a custom object/message as needed
+    return [uploadResponse.data, videoId]; // Or return a custom object/message as needed
   } catch (error) {
     console.error('Upload failed:', error);
     throw error; // Re-throw to allow the caller to handle the error
