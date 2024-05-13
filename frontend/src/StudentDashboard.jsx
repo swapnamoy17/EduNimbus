@@ -85,9 +85,9 @@ function StudentDashboard({ onLogout, user }) {
         state={{ isRecommended: type === 'recommended' }} // Pass isRecommended based on type
         className="course-card" 
         key={course.course_id}>
-            <img src='/no_content.png' alt={course.course_name} ></img>
+            <img src='./edu-nimbus.png' alt={course.course_name} ></img>
             <div className="course-info">
-                <h3>{course.title}</h3>
+                <h3>{course.course_name}</h3>
                 <p>{course.summary}</p>
                 <p>{course.tags}</p>
             </div>
