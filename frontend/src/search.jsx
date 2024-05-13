@@ -8,7 +8,7 @@ function SearchComponent() {
     const [searchType, setSearchType] = useState('tags');
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const userId = localStorage.getItem('userId')
     const navigate = useNavigate();
 
     const handleSearchChange = (event) => {
@@ -23,7 +23,7 @@ function SearchComponent() {
         setIsLoading(true);
         setResults([])
         try {
-            const response = await searchCourses(searchTerm, searchType);
+            const response = await searchCourses(searchTerm, searchType, userId);
             const data = await response.courses;
             console.log("search courses: ", data);
             setResults(data);
