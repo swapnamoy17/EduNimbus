@@ -1,5 +1,6 @@
 import makeApiCall from './apiService';
 import { videoApiClient } from './apiClient';
+import { videoAPiClientUplaod } from './apiClient';
 import axios from 'axios';
 
 const getVideosForCourse = async (courseId) => {
@@ -23,7 +24,7 @@ const uploadVideo = async (courseId, file, videoName) => {
       data: {},
       params: {video_name: videoName, object_name: objectName},
       headers: {}
-    }, videoApiClient);
+    }, videoAPiClientUplaod);
 
     if (!presignedUrlResponse || !presignedUrlResponse.upload_url) {
       throw new Error('Failed to obtain pre-signed URL');
