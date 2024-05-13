@@ -10,6 +10,15 @@ const getCoursesForUser = async (userId) => {
   }, courseApiClient);
 };
 
+const enrollinCourse = async(courseId, userId) => {
+  return makeApiCall({
+    method: 'post',
+    url: '/enroll', 
+    params: {user_id: userId, course_id: courseId},// Adjust to the correct endpoint
+     // Include the new course data in the request body
+  }, courseApiClient);
+};
+
 const addNewCourse = async (courseData) => {
     return makeApiCall({
       method: 'post',
@@ -18,4 +27,4 @@ const addNewCourse = async (courseData) => {
     }, courseApiClient);
   };
 
-export { getCoursesForUser, addNewCourse};
+export { getCoursesForUser, addNewCourse, enrollinCourse};

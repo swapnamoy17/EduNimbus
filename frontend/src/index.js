@@ -6,13 +6,16 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import reportWebVitals from './reportWebVitals';
 import { WebSocketProvider } from './WebSocketContext';
+import { CourseProvider } from './CourseContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <WebSocketProvider>
+        <CourseProvider>
         <App />
+        </CourseProvider>
       </WebSocketProvider>
     </Provider>
   </React.StrictMode>
