@@ -36,7 +36,7 @@ function SearchComponent() {
 
     const handleDropdownClick = (event) => {
         console.log("cojdeiochdshcijdfvjikd ", event.target.value);
-        navigate("/course/" + event.target.value);
+        navigate("/course/" + event.target.value, { state: { isRecommended: true } });
     }
 
     return (
