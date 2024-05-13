@@ -1,11 +1,15 @@
-import React, { useState, Navigate } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { searchCourses } from './services/course';
+import './search.css'
 
 function SearchComponent() {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchType, setSearchType] = useState('tags');
     const [results, setResults] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -17,9 +21,10 @@ function SearchComponent() {
 
     const handleSearch = async () => {
         setIsLoading(true);
+        setResults([])
         try {
             const response = await searchCourses(searchTerm, searchType);
-            const data = await response.json();
+            const data = await response.courses;
             console.log("search courses: ", data);
             setResults(data);
         } catch (error) {
@@ -29,8 +34,9 @@ function SearchComponent() {
         }
     };
 
-    const handleDropdownClick = (courseId) => {
-        <Navigate to={"/course/" + courseId} />
+    const handleDropdownClick = (event) => {
+        console.log("cojdeiochdshcijdfvjikd ", event.target.value);
+        navigate("/course/" + event.target.value);
     }
 
     return (
@@ -49,9 +55,10 @@ function SearchComponent() {
                 {isLoading ? 'Searching...' : 'Search'}
             </button>
             {results.length > 0 && (
-                <select>
-                    {results.map((course, index) => (
-                        <option key={course.course_id} value={course.course_name} onClick={handleDropdownClick}>
+                <select onChange={handleDropdownClick} defaultValue="">
+                    <option value="" disabled>Select a course</option>
+                    {results.map((course) => (
+                        <option key={course.course_id} value={course.course_id}>
                             {course.course_name}
                         </option>
                     ))}
