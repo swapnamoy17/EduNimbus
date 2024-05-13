@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './StudentDashboard.css'; // Make sure to create a corresponding CSS file
 import { Link, useNavigate } from 'react-router-dom';
 import { getCoursesForUser } from './services/course';
+import SearchComponent from './search';
 // Mock data for courses
 const enrolledCourses = [
   {
@@ -95,6 +96,7 @@ function StudentDashboard({ onLogout, user }) {
 
   return (
     <div className="student-dashboard">
+      <SearchComponent />
       <section className="course-section">
       <h2>Enrolled Courses</h2>
       <div className="course-container">

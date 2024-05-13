@@ -1,0 +1,50 @@
+/* Styles for the entire search container */
+.search-container {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc; /* Light grey border for the container */
+    border-radius: 5px; /* Rounded corners */
+    width: fit-content; /* Adjust width based on content */
+}
+
+/* Styles for the input field */
+input[type="text"] {
+    padding: 8px;
+    margin: 5px 5px 5px 0; /* Margins to space out elements */
+    border: 1px solid #ccc; /* Consistent border with the container */
+    border-radius: 4px; /* Rounded corners for the input field */
+    outline: none; /* Removes the highlight outline */
+}
+
+input[type="text"]:focus {
+    border-color: #0066CC; /* Highlight color when focused */
+}
+
+/* Styles for the radio buttons and their labels */
+input[type="radio"] {
+    margin: 0 5px 0 20px; /* Space before each radio button */
+}
+
+label {
+    margin-right: 10px; /* Space after the label text */
+}
+
+/* Styles for the search button */
+button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #007BFF; /* Blue background */
+    color: white; /* White text */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    outline: none; /* Removes the outline */
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+button:disabled {
+    background-color: #ccc; /* Gray out when disabled */
+    cursor: default; /* Default cursor when disabled */
+}
