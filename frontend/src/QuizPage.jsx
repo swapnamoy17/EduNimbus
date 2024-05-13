@@ -54,6 +54,11 @@ function QuizPage() {
       }
   }, [quizId])
 
+  if (quiz.length == 0) {
+    // Render loading indicator while JSON data is being fetched
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="quiz-container">
       <h1>{quizName}</h1>
