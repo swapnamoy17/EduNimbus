@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { BrowserRouter,Routes, Route, Navigate  } from 'react-router-dom'
 import Home from './Home';
 import Signup from './Signup';
@@ -11,7 +11,7 @@ import CoursePage from './CoursePage';
 import CourseSummaryPage from './CourseEnroll';
 import { logout } from './authenticate';
 import { useUserState } from './redux/useUserState';
-
+import WebSocketContext from './WebSocketContext';
 
 import './App.css';
 import userpool from './userpool';
@@ -21,6 +21,7 @@ function App() {
   const STUDENT_GROUP = "Students"
 
   const { userGroups } = useUserState();
+  const { disconnectWebSocket } = useContext(WebSocketContext);
 
   useEffect(()=>{
     let user=userpool.getCurrentUser();
@@ -40,9 +41,14 @@ function App() {
     }
   };
 
+  const onLogout = () => {
+    logout();
+    disconnectWebSocket();
+  }
+
   return (
     <BrowserRouter>
-      <Navbar onLogout={logout}/>
+      <Navbar onLogout={onLogout}/>
       <Routes>
         <Route path='/' element={<Home />}/>
         <Route path='/signup' element={<Signup />}/>
