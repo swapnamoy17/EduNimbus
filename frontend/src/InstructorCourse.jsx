@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import CloudComputingLogo from './edu-nimbus.png';
 import SambitSAvatar from './sambit.jpeg';
+import { uploadVideo } from './services/video';
 import './InstructorCourse.css';
 import NewQuizPopup from './newQuizPopup';
 import NewPPTPopup from './newPPTPopup';
@@ -45,12 +46,8 @@ const handleAddNewClickVideo = () => {
 };
 
 const handleClosePopupVideo = () => {
-  
-  setTimeout(() => {
-    setShowVideoPopup(false);
-    setNewVideoAdded(true);
-   }, 10000)
-    
+  setShowVideoPopup(false);
+  setNewVideoAdded(true);
 };
 
 
@@ -81,6 +78,15 @@ const handleClosePopupVideo = () => {
   //     }
   // }, [newVideoAdded, newVideoAdded])
 
+  const handleVideoUploadStart = async (file, videoName) => {
+    try {
+        const response = await uploadVideo(userId, courseId, file, videoName);
+        console.log('Upload successful:', response);
+        setVideos(prev => [...prev, {name:videoName,id:response[1]}]); // Assuming response contains new video data
+    } catch (error) {
+        console.error('Upload failed:', error);
+    }
+};
 
   useEffect(() => {
     // Simulating an API call to fetch quiz data
@@ -92,7 +98,7 @@ const handleClosePopupVideo = () => {
         console.log("hello again")
         console.log(response)
         setVideos(response.videos || []);
-        console.log(videos) // Assuming response.data contains the list of videos
+        console.log("Videos:",response.videos) // Assuming response.data contains the list of videos
       } catch (error) {
         console.error('Error fetching videos:', error);
       }
@@ -167,7 +173,7 @@ const handleClosePopupVideo = () => {
     
     </div>
     {showQuizPopup && <NewQuizPopup onClose={handleClosePopupQuiz} />}
-    {showVideoPopup && <NewVideoPopup onClose={handleClosePopupVideo} courseId={courseId} />}
+    {showVideoPopup && <NewVideoPopup onClose={handleClosePopupVideo} courseId={courseId} onVideoUploadStart={handleVideoUploadStart} />}
     {showPPTPopup && <NewPPTPopup onClose={handleClosePopupPPT} />}
     </div>
   );

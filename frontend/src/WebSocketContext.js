@@ -22,7 +22,7 @@ export const WebSocketProvider = ({ children }) => {
         ws.onmessage = (event) => {
             console.log('Message from server:', event.data);
             const data = JSON.parse(event.data);
-            // handleMessage(data);
+            alert('Video has been successfully uploaded!');
         };
         ws.onerror = error => {
             console.error('WebSocket error:', error);
