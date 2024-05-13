@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { uploadVideo } from './services/video';
 import './NewCoursePopup.css'; // make sure to create appropriate CSS for this
 
-function NewVideoPopup({ onClose, courseId}) {
+function NewVideoPopup({ onClose, courseId, onVideoUploadStart}) {
     const [videoName, setVideoName] = useState('');
   // Assuming these are your available tags
   const availableTags = ['AI', 'Machine Learning', 'Data Science', 'Big Data', 'Analytics'];
@@ -18,15 +18,10 @@ function NewVideoPopup({ onClose, courseId}) {
         alert('Please enter a video name.');
         return;
     }
+    onVideoUploadStart(videoFile, videoName);
 
-    try {
-        const response = await uploadVideo(courseId, videoFile, videoName);
-        console.log('Upload successful:', response);
-        onClose(); // Close the popup after successful upload
-    } catch (error) {
-        console.error('Upload failed:', error);
-        alert('Upload failed, please try again.');
-    }
+        // Immediately close the popup
+    onClose();
 };
 
   const handleFileChange = (file) => {
