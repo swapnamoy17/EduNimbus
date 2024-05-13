@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './CoursePage.css';
 import { getVideosForCourse, streamVideo } from './services/video';
 import { useParams } from 'react-router-dom';
+import { getQuizesForVideo } from './services/quiz';
 import axios from 'axios';
 
 function CoursePage() {
@@ -35,6 +36,8 @@ function CoursePage() {
   const [videoId, setVideoId] = useState('');
   const [videoName, setVideoName] = useState('');
   const [videos, setVideos] = useState([]);
+  const userId = localStorage.getItem('userId')
+  const [quizes, setQuizes] = useState([]);
 
   const quizzes = ["Quiz 1", "Quiz 2"];
   const ppts = ["PPT 1", "PPT 2"];
@@ -67,6 +70,14 @@ function CoursePage() {
         let transcript = await createDataUri(response.transcript);
         setVideoUrl(response.video);
         setSubtitle(transcript);
+
+        //for quizes
+        let quizresponse = await getQuizesForVideo(videoId);
+        console.log(quizresponse.quizes)
+        if (quizresponse.quizes.length > 0) {
+          console.log("Hello from quizes mi nino ", quizresponse.quizes[0].quiz_ref);
+        }
+        setQuizes(quizresponse.quizes || [])
       };
 
       fetchVideo();
@@ -108,8 +119,9 @@ function CoursePage() {
           <div className="quizzes-section">
             <h3 className="section-title">Quizzes</h3>
             <div className="quizzes-list">
-              {quizzes.map((quiz, index) => (
-                <a key={`quiz-${index}`} href="#" className="quiz-item">{quiz} Attempt</a>
+
+              {quizes.map((quize, index) => (
+                <a key={`quiz-${index}`} href="#" className="quiz-item">Quiz {index + 1}</a>
               ))}
             </div>
           </div>

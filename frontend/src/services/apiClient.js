@@ -55,6 +55,52 @@ courseApiClient.interceptors.request.use((config) => {
 }, (error) => {
     return Promise.reject(error);
 });
+
+const quizApiClient = axios.create({
+  baseURL: process.env.REACT_APP_QUIZ_GATEWAY_ENDPOINT_GET,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+quizApiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  console.log("videoAPIClient - token: ", token);
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+const quizAPiClientUplaod = axios.create({
+  baseURL: process.env.REACT_APP_QUIZ_GATEWAY_ENDPOINT_GET,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+quizAPiClientUplaod.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    console.log("quizAPIClientUpload - token: ", token);
+    
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    // Set default Content-Type to 'application/json' unless explicitly defined in the request
+    config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
+    console.log(config);
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
+
+
 export { videoApiClient }
 export { courseApiClient }
 export { videoAPiClientUplaod }
+export { quizApiClient }
+export { quizAPiClientUplaod }

@@ -8,6 +8,7 @@ import NewVideoPopup from './newVideoPopup';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { getVideosForCourse } from './services/video';
+import { getQuizesForVideo } from './services/quiz';
 // import SampleVideo from './sample-video.mp4';
 // import SampleBand from './sample-band.jpg';
 
@@ -16,12 +17,13 @@ function InstructorCourse() {
   const [quizData, setQuizData] = useState([]);
   const [videoData, setVideoData] = useState([]);
   const [pptData, setPPTData] = useState([]);
-  const [showQuizPopup, setShowQuizPopup] = useState(false);
+  const [showQuizPopup, setShowQuizPopup] = useState(false, []);
   const [showPPTPopup, setShowPPTPopup] = useState(false);
   const userId = localStorage.getItem('userId')
   const [showVideoPopup, setShowVideoPopup] = useState(false);
   const [videos, setVideos] = useState([]);
   const [newVideoAdded, setNewVideoAdded] = useState(false);
+  const [quizes, setQuizes] = useState([]);
 
   const handleAddNewClickQuiz = () => {
         setShowQuizPopup(true);
@@ -93,10 +95,29 @@ const handleClosePopupVideo = () => {
         console.log(response)
         setVideos(response.videos || []);
         console.log(videos) // Assuming response.data contains the list of videos
+
+        //await fetchQuizes(videos)
       } catch (error) {
         console.error('Error fetching videos:', error);
       }
     };
+
+    // const fetchQuizes = async (videos) => {
+    //   console.log("Hello from the other side")
+    //   let quizresponse = [];
+
+      
+    //   let quizresponse = await getQuizesForVideo(videoId);
+    //   console.log(quizresponse.quizes)
+    //   if (quizresponse.quizes.length > 0) {
+    //       console.log("Hello from quizes mi nino ", quizresponse.quizes[0].quiz_ref);
+    //       for (let i = 0; i < quizresponse.quizes.length; i++)
+    //       {
+
+    //       }
+    //   }
+    //   setQuizes(quizresponse.quizes || [])
+    // }
 
     
       if (userId || newVideoAdded) {
@@ -166,7 +187,7 @@ const handleClosePopupVideo = () => {
       </div>
     
     </div>
-    {showQuizPopup && <NewQuizPopup onClose={handleClosePopupQuiz} />}
+    {showQuizPopup && <NewQuizPopup onClose={handleClosePopupQuiz} videos={videos} />}
     {showVideoPopup && <NewVideoPopup onClose={handleClosePopupVideo} courseId={courseId} />}
     {showPPTPopup && <NewPPTPopup onClose={handleClosePopupPPT} />}
     </div>
