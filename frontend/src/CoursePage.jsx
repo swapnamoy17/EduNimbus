@@ -1,45 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import './CoursePage.css';
+import { useParams, useLocation, useNavigate } from 'react-router-dom'; // useNavigate instead of useHistory
 import { getVideosForCourse, streamVideo } from './services/video';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useCourses } from './CourseContext';  // Assuming you have created this Context
 import { getQuizesForVideo } from './services/quiz';
 import { getPPTsForVideo } from './services/ppt';
 import axios from 'axios';
 
 function CoursePage() {
+    const { courseId } = useParams();
+    const navigate = useNavigate(); // This replaces useHistory
+    const location = useLocation();
+    const { enrolledCourses, enrollCourse } = useCourses();
+    
+    const [videos, setVideos] = useState([]);
+    const [videoUrl, setVideoUrl] = useState('');
+    const [subtitle, setSubtitle] = useState('');
+    const [videoId, setVideoId] = useState('');
+    const [videoName, setVideoName] = useState('');
+    const isRecommended = location.state?.isRecommended || false;
 
-  let { courseId } = useParams();
-
-  function formatSubtitles(subtitles) {
-    const formattedSubtitles = subtitles.replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2');
-    return formattedSubtitles;
-  }
-
-  async function createDataUri(preSignedUrl='') {
-    try {
-      const response = await axios.get(preSignedUrl);
-      const transcript = response.data;
-  
-      const header = "WEBVTT\n\n";
-      let formattedText = header + transcript.replace(/\n/g, '\n');
-      formattedText = formatSubtitles(formattedText);
-      console.log("cgvhgdcvsbdcjdcsx", formattedText);
-      const encodedSubtitles = encodeURIComponent(formattedText);
-      return `data:text/vtt;charset=utf-8,${encodedSubtitles}`;
-    } catch (error) {
-      console.error('Failed to fetch or process transcript:', error);
-      return null;
+    function formatSubtitles(subtitles) {
+        const formattedSubtitles = subtitles.replace(/(\d{2}:\d{2}:\d{2}),(\d{3})/g, '$1.$2');
+        return formattedSubtitles;
     }
-  }
 
-  const [videoUrl, setVideoUrl] = useState('');
-  const [subtitle, setSubtitle] = useState('');
-  const [videoId, setVideoId] = useState('');
-  const [videoName, setVideoName] = useState('');
-  const [videos, setVideos] = useState([]);
+    async function createDataUri(preSignedUrl='') {
+        try {
+            const response = await axios.get(preSignedUrl);
+            const transcript = response.data;
+            const header = "WEBVTT\n\n";
+            let formattedText = header + transcript.replace(/\n/g, '\n');
+            formattedText = formatSubtitles(formattedText);
+            const encodedSubtitles = encodeURIComponent(formattedText);
+            return `data:text/vtt;charset=utf-8,${encodedSubtitles}`;
+        } catch (error) {
+            console.error('Failed to fetch or process transcript:', error);
+            return null;
+        }
+      }
+  
   const userId = localStorage.getItem('userId')
   const [quizes, setQuizes] = useState([]);
-  const navigate = useNavigate();
   const [ppts, setPpts] = useState([]);
 
   const quizzes = ["Quiz 1", "Quiz 2"];
@@ -94,64 +96,90 @@ function CoursePage() {
     }
   }, [videoId])
 
-  const handleVideoClick = (id) => {
-    setVideoId(id);
-    setVideoName(videos.filter(video => video.id === id)[0]?.name);
-  };
-
-  const handleQuizButtonClick = (quiz) => {
-    navigate(`/course/${courseId}/quiz/${quiz.quiz_id}`);
-  }
+  
 
   const handlePPTButtonClick = (ppt) => {
     navigate(`/course/${courseId}/ppt/${ppt.ppt_id}`);
-  }
+    }
 
-  return (
-    <div className="course-page">
-      <header className="course-header">
-        <h1>Cloud Computing</h1>
-        <div className="user-info">
-          <span>Sambit S</span>
-          <img src="path/to/user/avatar" alt="User" />
-        </div>
-      </header>
-      <div className="main-content">
-        <div className="video-player-container">
-          <div className="video-placeholder">
-            <video key={videoUrl} controls controlsList="nodownload">
-              {videoUrl && <source src={videoUrl} type="video/mp4" />}
-              {(
-                <track 
-                  src={subtitle}
-                  kind="subtitles"
-                  srcLang="en"
-                  label="English"
-                  default
-                />
-              )}
-            </video>
-          </div>
-          <h2>{videoName}</h2>
-          
-          <div className="quizzes-section">
-            <h3 className="section-title">Quizzes</h3>
-            <div className="quizzes-list">
+    useEffect(() => {
+        const fetchAllVideos = async () => {
+            const response = await getVideosForCourse(courseId);
+            setVideos(response?.videos || []);
+            if (response?.videos.length > 0) {
+                const firstVideo = response.videos[0];
+                setVideoId(firstVideo.id);
+                setVideoName(firstVideo.name);
+                fetchVideoDetails(firstVideo.id);
+            }
+        };
 
-              {/* {quizes.map((quize, index) => (
-                <a key={`quiz-${index}`} href="#" className="quiz-item">{quize.quiz_name}</a>
-              ))} */}
-              {quizes.map((quize, index) => (
-              <button 
-                key={`quiz-${index}`} 
-                className="quiz-item" 
-                onClick={() => handleQuizButtonClick(quize)}
-              >
-              {quize.quiz_name}
-              </button>
-              ))}
-            </div>
-          </div>
+        fetchAllVideos();
+    }, [courseId]);
+
+    const fetchVideoDetails = async (id) => {
+        const response = await streamVideo(id);
+        setVideoUrl(response.video);
+        let transcript = await createDataUri(response.transcript);
+        setSubtitle(transcript);
+    };
+
+    const handleEnroll = async () => {
+        const success = await enrollCourse(courseId);
+        if (success) {
+          navigate(`/course/${courseId}`, { replace: true, state: { isRecommended: false } }); // Use navigate for redirection
+        } else {
+            alert('Failed to enroll!');
+        }
+    };
+
+    const handleVideoClick = (id) => {
+        if (!isRecommended) {
+            setVideoId(id);
+            setVideoName(videos.filter(video => video.id === id)[0]?.name);
+        }
+    };
+
+    const handleQuizButtonClick = (quiz) => {
+      navigate(`/course/${courseId}/${quiz.quiz_id}`);
+    };
+
+    return (
+        <div className="course-page">
+            <div className="main-content">
+                <div className="video-player-container">
+                    <div className="video-placeholder">
+                        <video key={videoUrl} controls controlsList="nodownload">
+                            {videoUrl && <source src={videoUrl} type="video/mp4" />}
+                            <track 
+                                src={subtitle}
+                                kind="subtitles"
+                                srcLang="en"
+                                label="English"
+                                default
+                            />
+                        </video>
+                    </div>
+                    <h2>{videoName}</h2>
+                    {isRecommended ? (
+                        <button onClick={handleEnroll}>Enroll in Course</button>
+                    ) : (
+                        <div>
+                            <div className="quizzes-section">
+                                <h3 className="section-title">Quizzes</h3>
+                                {/* Example quiz list */}
+                                <div className="quizzes-list">
+                                {quizes.map((quize, index) => (
+                                <button 
+                                key={`quiz-${index}`} 
+                                className="quiz-item" 
+                                onClick={() => handleQuizButtonClick(quize)}
+                                  >
+                                {quize.quiz_name}
+                                </button>
+                                ))}
+                              </div>
+                              </div>
           <div className="ppts-section">
             <h3 className="section-title">Presentations</h3>
             <div className="ppts-list">
@@ -166,7 +194,7 @@ function CoursePage() {
               ))}
             </div>
           </div>
-        </div>
+        </div>)}
         <aside className="sidebar">
           <div className="videos-list">
             <h3>Videos</h3>
@@ -177,6 +205,7 @@ function CoursePage() {
             </ul>
           </div>
         </aside>
+      </div>
       </div>
     </div>
   );

@@ -2,6 +2,11 @@
 .course-page {
     font-family: 'Arial', sans-serif;
   }
+
+  .disabled {
+    color: grey;
+    cursor: not-allowed;
+}
   
   .course-header {
     display: flex;
