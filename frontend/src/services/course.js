@@ -27,11 +27,11 @@ const addNewCourse = async (courseData) => {
     }, courseApiClient);
   };
 
-const searchCourses = async (query, type) => {
+const searchCourses = async (query, type, userId) => {
   return makeApiCall({
     method: 'get',
     url: '/recommended', 
-    params: { query: query, type: type }, // Include the new course data in the request body
+    params: { query: query, type: type, userId: userId }, // Include the new course data in the request body
   }, courseApiClient);
 }
 
